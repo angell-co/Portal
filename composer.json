@@ -1,0 +1,47 @@
+{
+    "name": "angellco/portal",
+    "description": "Brings enhanced Live Preview capabilities to Craft, including a device toggle and additional targets in the main Live Preview tool.",
+    "type": "craft-plugin",
+    "version": "0.1.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "portal",
+        "live-preview"
+    ],
+    "support": {
+        "docs": "https://github.com/angell-co/portal/blob/master/README.md",
+        "issues": "https://github.com/angell-co/portal/issues"
+    },
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Angell & Co",
+            "homepage": "https://angell.io"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.2"
+    },
+    "autoload": {
+        "psr-4": {
+          "angellco\\portal\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Portal",
+        "handle": "portal",
+        "hasCpSettings": false,
+        "hasCpSection": true,
+        "changelogUrl": "https://raw.githubusercontent.com/angell-co/portal/master/CHANGELOG.md",
+        "components": {
+            "targets": "angellco\\portal\\services\\Targets"
+        },
+        "class": "angellco\\portal\\Portal",
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
