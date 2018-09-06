@@ -1,12 +1,13 @@
-# Portal plugin for Craft CMS 3.x
+# Portal
 
 Brings enhanced Live Preview capabilities to Craft, including a device toggle and additional targets in the main Live Preview tool.
 
-![Screenshot](resources/img/plugin-logo.png)
+
+**[>>> ROADMAP <<<](https://github.com/angell-co/Portal/projects/1)**
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0-beta.23 or later.
+This plugin requires Craft CMS 3.0.2 or later.
 
 ## Installation
 
@@ -22,22 +23,6 @@ To install the plugin, follow these instructions.
 
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Portal.
 
-## Portal Overview
-
--Insert text here-
-
-## Configuring Portal
-
--Insert text here-
-
-## Using Portal
-
--Insert text here-
-
-## Portal Roadmap
-
-Some things to do, and ideas for potential features:
-
-* Release it
+---
 
 Brought to you by [Angell & Co](https://angell.io)
