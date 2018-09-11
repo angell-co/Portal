@@ -161,7 +161,7 @@ class Portal extends Plugin
     private function _loadGlobalCpResources()
     {
         // Check the conditions are right to run
-        if ( Craft::$app->request->isCpRequest && !Craft::$app->request->getAcceptsJson())
+        if (Craft::$app->request->isCpRequest && !Craft::$app->request->getAcceptsJson())
         {
             $view = Craft::$app->getView();
 
@@ -169,7 +169,7 @@ class Portal extends Plugin
 
             $settings = [];
 
-            $view->registerJs('Portal.LivePreview.init('.Json::encode($settings, JSON_UNESCAPED_UNICODE).');');
+            $view->registerJs('new Portal.LivePreview('.Json::encode($settings, JSON_UNESCAPED_UNICODE).');');
         }
 
     }

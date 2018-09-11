@@ -12,43 +12,68 @@
  * @since     0.1.0
  */
 
-(function($){
+if (typeof Portal === 'undefined')
+{
+    Portal = {};
+}
 
-    if (typeof Portal === 'undefined')
+Portal.LivePreview = Garnish.Base.extend(
+{
+
+    $toolbar: null,
+    $breakpointButtons: null,
+
+    init: function(settings)
     {
-        Portal = {};
-    }
+        Garnish.on(Craft.LivePreview, 'enter', $.proxy(function(ev)
+        {
+            this.onEnter(ev)
+        }, this));
+    },
 
-    Portal.LivePreview = Garnish.Base.extend(
+    onEnter: function(ev)
     {
+        if (!this.$toolbar) {
 
-        $toolbar: null,
-        $breakpointButtons: null,
+            Craft.livePreview.$iframe.addClass('portal-lp-iframe');
 
-        init: function(settings)
-        {
-            Garnish.on(Craft.LivePreview, 'enter', this.onEnter);
-        },
+            this.$toolbar = $('<header class="portal-lp-toolbar header" />');
 
-        onEnter: function()
-        {
-            if (!this.$toolbar) {
+            this.$breakpointButtons = $('<div class="btngroup" />').appendTo(this.$toolbar);
 
-                this.$toolbar = $('<header class="header" />');
+            $('<div class="btn" data-width="" data-height="">Desktop</div>').appendTo(this.$breakpointButtons);
+            $('<div class="btn" data-width="1024" data-height="768">Tablet</div>').appendTo(this.$breakpointButtons);
+            $('<div class="btn" data-width="375" data-height="667">Mobile</div>').appendTo(this.$breakpointButtons);
 
-                this.$breakpointButtons = $('<div class="btngroup" />').appendTo(this.$toolbar);
+            this.$toolbar.prependTo(Craft.livePreview.$iframeContainer);
 
-                $('<div class="btn">Desktop</div>').appendTo(this.$breakpointButtons);
-                $('<div class="btn">Tablet</div>').appendTo(this.$breakpointButtons);
-                $('<div class="btn">Mobile</div>').appendTo(this.$breakpointButtons);
+            this.addListener($('.portal-lp-toolbar .btn'), 'activate', 'changeBreakpoint');
 
-                this.$toolbar.prependTo(Craft.livePreview.$iframeContainer);
-            }
         }
-    });
+    },
 
-    Portal.LivePreview.init = function(settings) {
-        Portal.livePreview = new Portal.LivePreview(settings);
-    };
+    changeBreakpoint: function(ev)
+    {
+        var $btn = $(ev.target),
+            w = $btn.data('width'),
+            h = $btn.data('height');
 
-})(jQuery);
+        if (w !== '' && h !== '') {
+            Craft.livePreview.$iframe.addClass('portal-lp-iframe--resized');
+            Craft.livePreview.$iframe.css({
+                width: w + 'px',
+                height: h + 'px',
+                left: '50%',
+                marginLeft: '-' + (w / 2) + 'px'
+            });
+        } else {
+            Craft.livePreview.$iframe.removeClass('portal-lp-iframe--resized');
+            Craft.livePreview.$iframe.css({
+                width: '100%',
+                height: '100%',
+                left: 0,
+                marginLeft: 0
+            });
+        }
+    }
+});

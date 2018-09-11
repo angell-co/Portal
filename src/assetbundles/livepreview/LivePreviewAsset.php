@@ -44,6 +44,9 @@ class LivePreviewAsset extends AssetBundle
         $this->js = [
             'LivePreview.min.js',
         ];
+        $this->css = [
+            'LivePreview.min.css',
+        ];
 
         parent::init();
     }
