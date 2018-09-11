@@ -33,9 +33,25 @@ Portal.LivePreview = Garnish.Base.extend(
 
     onEnter: function(ev)
     {
-        if (!this.$toolbar) {
 
-            Craft.livePreview.$iframe.addClass('portal-lp-iframe');
+        if (Craft.livePreview.$iframeContainer.outerWidth() > 1024) {
+
+            this.attachToolbar();
+
+        } else {
+
+            this.detachToolbar();
+
+        }
+
+    },
+
+    attachToolbar: function()
+    {
+
+        Craft.livePreview.$iframe.addClass('portal-lp-iframe');
+
+        if (!this.$toolbar) {
 
             this.$toolbar = $('<header class="portal-lp-toolbar header" />');
 
@@ -45,10 +61,20 @@ Portal.LivePreview = Garnish.Base.extend(
             $('<div class="btn" data-width="1024" data-height="768">Tablet</div>').appendTo(this.$breakpointButtons);
             $('<div class="btn" data-width="375" data-height="667">Mobile</div>').appendTo(this.$breakpointButtons);
 
-            this.$toolbar.prependTo(Craft.livePreview.$iframeContainer);
+            this.addListener($('.btn', this.$breakpointButtons), 'activate', 'changeBreakpoint');
+        }
 
-            this.addListener($('.portal-lp-toolbar .btn'), 'activate', 'changeBreakpoint');
+        this.$toolbar.prependTo(Craft.livePreview.$iframeContainer);
 
+    },
+
+    detachToolbar: function()
+    {
+        Craft.livePreview.$iframe.removeClass('portal-lp-iframe');
+        this.resetIframe();
+
+        if (this.$toolbar) {
+            this.$toolbar.detach();
         }
     },
 
@@ -67,13 +93,18 @@ Portal.LivePreview = Garnish.Base.extend(
                 marginLeft: '-' + (w / 2) + 'px'
             });
         } else {
-            Craft.livePreview.$iframe.removeClass('portal-lp-iframe--resized');
-            Craft.livePreview.$iframe.css({
-                width: '100%',
-                height: '100%',
-                left: 0,
-                marginLeft: 0
-            });
+            this.resetIframe();
         }
+    },
+
+    resetIframe: function()
+    {
+        Craft.livePreview.$iframe.removeClass('portal-lp-iframe--resized');
+        Craft.livePreview.$iframe.css({
+            width: '100%',
+            height: '100%',
+            left: 0,
+            marginLeft: 0
+        });
     }
 });
