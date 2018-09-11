@@ -10,11 +10,13 @@
 
 namespace angellco\portal;
 
+use angellco\portal\assetbundles\livepreview\LivePreviewAsset;
 use angellco\portal\services\PortalService as PortalServiceService;
 use angellco\portal\services\Targets as TargetsService;
 
 use Craft;
 use craft\base\Plugin;
+use craft\helpers\Json;
 use craft\services\Plugins;
 use craft\events\PluginEvent;
 use craft\web\UrlManager;
@@ -81,6 +83,16 @@ class Portal extends Plugin
         parent::init();
         self::$plugin = $this;
 
+        Event::on(
+            Plugins::class,
+            Plugins::EVENT_AFTER_LOAD_PLUGINS,
+            function () {
+                if ($this->isInstalled && !Craft::$app->plugins->doesPluginRequireDatabaseUpdate($this)) {
+                    $this->_loadGlobalCpResources();
+                }
+            }
+        );
+
 //        // Register our site routes
 //        Event::on(
 //            UrlManager::class,
@@ -138,7 +150,30 @@ class Portal extends Plugin
         );
     }
 
-    // Protected Methods
+    // Private Methods
     // =========================================================================
+
+    /**
+     * Loads up the CP resources we need everywhere.
+     *
+     * @throws \yii\base\InvalidConfigException
+     */
+    private function _loadGlobalCpResources()
+    {
+        // Check the conditions are right to run
+        if ( Craft::$app->request->isCpRequest && !Craft::$app->request->getAcceptsJson())
+        {
+            $view = Craft::$app->getView();
+
+            $view->registerAssetBundle(LivePreviewAsset::class);
+
+            $settings = [
+                'somesettings' => 'someresult'
+            ];
+
+            $view->registerJs('Portal.LivePreview.init('.Json::encode($settings, JSON_UNESCAPED_UNICODE).');');
+        }
+
+    }
 
 }
