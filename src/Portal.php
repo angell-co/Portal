@@ -167,9 +167,7 @@ class Portal extends Plugin
 
             $view->registerAssetBundle(LivePreviewAsset::class);
 
-            $settings = [
-                'somesettings' => 'someresult'
-            ];
+            $settings = [];
 
             $view->registerJs('Portal.LivePreview.init('.Json::encode($settings, JSON_UNESCAPED_UNICODE).');');
         }

@@ -21,21 +21,29 @@
 
     Portal.LivePreview = Garnish.Base.extend(
     {
+
+        $toolbar: null,
+        $breakpointButtons: null,
+
         init: function(settings)
         {
-            console.log('Portal LivePreview loaded');
-            console.log(settings);
+            Garnish.on(Craft.LivePreview, 'enter', this.onEnter);
+        },
 
-            Garnish.on(Craft.LivePreview, 'enter', function() {
-                console.log('enter');
-                console.log(Craft.livePreview);
-            });
-            Garnish.on(Craft.LivePreview, 'slideIn', function() {
-                console.log('slideIn');
-            });
-            Garnish.on(Craft.LivePreview, 'exit', function() {
-                console.log('exit');
-            });
+        onEnter: function()
+        {
+            if (!this.$toolbar) {
+
+                this.$toolbar = $('<header class="header" />');
+
+                this.$breakpointButtons = $('<div class="btngroup" />').appendTo(this.$toolbar);
+
+                $('<div class="btn">Desktop</div>').appendTo(this.$breakpointButtons);
+                $('<div class="btn">Tablet</div>').appendTo(this.$breakpointButtons);
+                $('<div class="btn">Mobile</div>').appendTo(this.$breakpointButtons);
+
+                this.$toolbar.prependTo(Craft.livePreview.$iframeContainer);
+            }
         }
     });
 
