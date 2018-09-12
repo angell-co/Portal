@@ -16,14 +16,14 @@ use angellco\portal\services\Targets as TargetsService;
 
 use Craft;
 use craft\base\Plugin;
-use craft\controllers\CategoriesController;
-use craft\controllers\EntriesController;
+use craft\events\TemplateEvent;
 use craft\helpers\Json;
 use craft\services\Plugins;
 use craft\events\PluginEvent;
 use craft\web\UrlManager;
 use craft\events\RegisterUrlRulesEvent;
 
+use craft\web\View;
 use yii\base\Event;
 
 /**
@@ -85,6 +85,7 @@ class Portal extends Plugin
         parent::init();
         self::$plugin = $this;
 
+        // Register global CP resources after all plugins have loaded
         Event::on(
             Plugins::class,
             Plugins::EVENT_AFTER_LOAD_PLUGINS,
@@ -95,21 +96,30 @@ class Portal extends Plugin
             }
         );
 
-        // When entry / category is previewed we can hijack the UA
-        Event::on(
-            EntriesController::class,
-            EntriesController::EVENT_PREVIEW_ENTRY,
-            function () {
-                $this->_fakeUserAgent();
-            }
-        );
-        Event::on(
-            CategoriesController::class,
-            CategoriesController::EVENT_PREVIEW_CATEGORY,
-            function () {
-                $this->_fakeUserAgent();
-            }
-        );
+        // If its a Live Preview request then we need to do stuff
+        if (Craft::$app->request->isLivePreview) {
+
+            // First we hijack the UA
+            $this->_fakeUserAgent();
+
+            // Then we hijack the rendering template, if we need to
+            Event::on(
+                View::class,
+                View::EVENT_AFTER_RENDER_PAGE_TEMPLATE,
+                function (TemplateEvent $event) {
+                    if (isset($_COOKIE['spoon_template'])) {
+
+                        $newTemplate = $_COOKIE['spoon_template'];
+
+                        if ($newTemplate !== "" && $event->template !== $newTemplate) {
+                            $event->output = Craft::$app->view->renderPageTemplate($newTemplate, $event->variables);
+                        }
+                    }
+                }
+            );
+
+        }
+
 
 
 //        // Register our site routes

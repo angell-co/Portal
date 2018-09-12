@@ -21,14 +21,19 @@ Portal.LivePreview = Garnish.Base.extend(
 {
 
     $toolbar: null,
-    $breakpointButtons: null,
 
     init: function(settings)
     {
+
+        // We always want to load with the default page template
+        Cookies.remove('spoon_template');
+
+        // Bind to the live preview enter event
         Garnish.on(Craft.LivePreview, 'enter', $.proxy(function(ev)
         {
             this.onEnter(ev)
         }, this));
+
     },
 
     onEnter: function(ev)
@@ -55,19 +60,40 @@ Portal.LivePreview = Garnish.Base.extend(
 
             this.$toolbar = $('<header class="portal-lp-toolbar header" />');
 
-            this.$breakpointButtons = $('<div class="btngroup" />').appendTo(this.$toolbar);
 
-            $('<div class="btn" data-width="" data-height="" data-breakpoint="desktop">Desktop</div>').appendTo(this.$breakpointButtons);
-            $('<div class="btn" data-width="1024" data-height="768" data-breakpoint="tablet">Tablet</div>').appendTo(this.$breakpointButtons);
-            $('<div class="btn" data-width="375" data-height="667" data-breakpoint="mobile">Mobile</div>').appendTo(this.$breakpointButtons);
+            // Breakpoints
+            var $breakpointButtons = $('<div class="btngroup left" />').appendTo(this.$toolbar);
 
-            this.addListener($('.btn', this.$breakpointButtons), 'activate', 'changeBreakpoint');
+            $('<div class="btn" data-width="" data-height="" data-breakpoint="desktop">Desktop</div>').appendTo($breakpointButtons);
+            $('<div class="btn" data-width="1024" data-height="768" data-breakpoint="tablet">Tablet</div>').appendTo($breakpointButtons);
+            $('<div class="btn" data-width="375" data-height="667" data-breakpoint="mobile">Mobile</div>').appendTo($breakpointButtons);
+
+            this.addListener($('.btn', $breakpointButtons), 'activate', 'changeBreakpoint');
 
             // Set the window to the last breakpoint we have in the cookie
             var currentBreakpoint = Cookies.get('spoon_breakpoint');
             if (currentBreakpoint) {
-                this.$breakpointButtons.find('.btn[data-breakpoint="'+currentBreakpoint+'"]').click();
+                $breakpointButtons.find('.btn[data-breakpoint="'+currentBreakpoint+'"]').click();
             }
+
+
+            // Target selector
+            var $targetMenuBtn = $('<div class="btn menubtn right">'+Craft.t('portal', 'Choose Target')+'</div>').appendTo(this.$toolbar),
+                $targetMenu = $('<div class="menu" />').appendTo(this.$toolbar),
+                $targetMenuUl = $('<ul />').appendTo($targetMenu);
+
+            $('<li><a data-template="">Primary Page</a></li>').appendTo($targetMenuUl);
+            $('<li><a data-template="news/_entry">Something Else</a></li>').appendTo($targetMenuUl);
+
+            new Garnish.MenuBtn($targetMenuBtn,
+            {
+                onOptionSelect: function(option)
+                {
+                    var template = $(option).data('template');
+                    Cookies.set('spoon_template', template);
+                    Craft.livePreview.forceUpdateIframe();
+                }
+            });
 
         }
 
