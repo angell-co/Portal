@@ -64,9 +64,10 @@ Portal.LivePreview = Garnish.Base.extend(
             // Breakpoints
             var $breakpointButtons = $('<div class="btngroup left" />').appendTo(this.$toolbar);
 
-            $('<div class="btn" data-width="" data-height="" data-breakpoint="desktop">Desktop</div>').appendTo($breakpointButtons);
-            $('<div class="btn" data-width="1024" data-height="768" data-breakpoint="tablet">Tablet</div>').appendTo($breakpointButtons);
-            $('<div class="btn" data-width="375" data-height="667" data-breakpoint="mobile">Mobile</div>').appendTo($breakpointButtons);
+            // TODO make these configurable
+            $('<div class="btn" data-width="" data-height="" data-breakpoint="desktop">'+Craft.t('portal', 'Desktop')+'</div>').appendTo($breakpointButtons);
+            $('<div class="btn" data-width="1024" data-height="768" data-breakpoint="tablet">'+Craft.t('portal', 'Tablet')+'</div>').appendTo($breakpointButtons);
+            $('<div class="btn" data-width="375" data-height="667" data-breakpoint="mobile">'+Craft.t('portal', 'Mobile')+'</div>').appendTo($breakpointButtons);
 
             this.addListener($('.btn', $breakpointButtons), 'activate', 'changeBreakpoint');
 
@@ -82,6 +83,7 @@ Portal.LivePreview = Garnish.Base.extend(
                 $targetMenu = $('<div class="menu" />').appendTo(this.$toolbar),
                 $targetMenuUl = $('<ul />').appendTo($targetMenu);
 
+            // TODO load up from the backend with correct context
             $('<li><a data-template="">Primary Page</a></li>').appendTo($targetMenuUl);
             $('<li><a data-template="news/_entry">Something Else</a></li>').appendTo($targetMenuUl);
 

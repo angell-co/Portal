@@ -50,4 +50,23 @@ class LivePreviewAsset extends AssetBundle
 
         parent::init();
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function registerAssetFiles($view)
+    {
+        parent::registerAssetFiles($view);
+
+        if ($view instanceof View) {
+            $view->registerTranslations('portal', [
+                'Desktop',
+                'Tablet',
+                'Mobile',
+                'Choose Target'
+            ]);
+        }
+
+    }
+
 }

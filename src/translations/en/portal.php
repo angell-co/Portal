@@ -22,4 +22,8 @@
  */
 return [
     'Portal plugin loaded' => 'Portal plugin loaded',
+    'Desktop' => 'Desktop',
+    'Tablet' => 'Tablet',
+    'Mobile' => 'Mobile',
+    'Choose Target' => 'Choose Target'
 ];

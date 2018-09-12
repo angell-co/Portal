@@ -10,7 +10,6 @@ gulp.task('livepreview_js', function() {
     return gulp.src(['node_modules/js-cookie/src/js.cookie.js','src/LivePreview.js'])
         .pipe(uglify())
         .pipe(concat('LivePreview.min.js'))
-        // .pipe(rename({ extname: '.min.js' }))
         .pipe(gulp.dest('livepreview/dist/'));
 });
 
