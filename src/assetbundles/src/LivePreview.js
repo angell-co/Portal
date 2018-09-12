@@ -26,7 +26,7 @@ Portal.LivePreview = Garnish.Base.extend(
     {
 
         // We always want to load with the default page template
-        Cookies.remove('spoon_template');
+        Cookies.remove('portal_template');
 
         // Bind to the live preview enter event
         Garnish.on(Craft.LivePreview, 'enter', $.proxy(function(ev)
@@ -72,7 +72,7 @@ Portal.LivePreview = Garnish.Base.extend(
             this.addListener($('.btn', $breakpointButtons), 'activate', 'changeBreakpoint');
 
             // Set the window to the last breakpoint we have in the cookie
-            var currentBreakpoint = Cookies.get('spoon_breakpoint');
+            var currentBreakpoint = Cookies.get('portal_breakpoint');
             if (currentBreakpoint) {
                 $breakpointButtons.find('.btn[data-breakpoint="'+currentBreakpoint+'"]').click();
             }
@@ -92,7 +92,7 @@ Portal.LivePreview = Garnish.Base.extend(
                 onOptionSelect: function(option)
                 {
                     var template = $(option).data('template');
-                    Cookies.set('spoon_template', template);
+                    Cookies.set('portal_template', template);
                     Craft.livePreview.forceUpdateIframe();
                 }
             });
@@ -122,7 +122,7 @@ Portal.LivePreview = Garnish.Base.extend(
             bp = $btn.data('breakpoint');
 
         // Set the breakpoint cookie
-        Cookies.set('spoon_breakpoint', bp);
+        Cookies.set('portal_breakpoint', bp);
 
         // Change the size of the iframe
         if (w !== '' && h !== '') {

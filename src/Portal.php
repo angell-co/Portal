@@ -107,14 +107,7 @@ class Portal extends Plugin
                 View::class,
                 View::EVENT_AFTER_RENDER_PAGE_TEMPLATE,
                 function (TemplateEvent $event) {
-                    if (isset($_COOKIE['spoon_template'])) {
-
-                        $newTemplate = $_COOKIE['spoon_template'];
-
-                        if ($newTemplate !== "" && $event->template !== $newTemplate) {
-                            $event->output = Craft::$app->view->renderPageTemplate($newTemplate, $event->variables);
-                        }
-                    }
+                    $this->_switchTemplate($event);
                 }
             );
 
@@ -160,9 +153,9 @@ class Portal extends Plugin
      */
     private function _fakeUserAgent()
     {
-        if (isset($_COOKIE['spoon_breakpoint'])) {
+        if (isset($_COOKIE['portal_breakpoint'])) {
 
-            $breakpoint = $_COOKIE['spoon_breakpoint'];
+            $breakpoint = $_COOKIE['portal_breakpoint'];
             $headers = Craft::$app->request->getHeaders();
 
             if ($breakpoint === 'tablet') {
@@ -171,6 +164,21 @@ class Portal extends Plugin
 
             if ($breakpoint === 'mobile') {
                 $headers->set('user-agent', 'Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53');
+            }
+        }
+    }
+
+    /**
+     * Changes the templte of the rendering page to whatever is in the cookie
+     */
+    private function _switchTemplate()
+    {
+        if (isset($_COOKIE['portal_template'])) {
+
+            $newTemplate = $_COOKIE['portal_template'];
+
+            if ($newTemplate !== "" && $event->template !== $newTemplate) {
+                $event->output = Craft::$app->view->renderPageTemplate($newTemplate, $event->variables);
             }
         }
     }
