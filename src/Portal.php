@@ -171,7 +171,7 @@ class Portal extends Plugin
     /**
      * Changes the templte of the rendering page to whatever is in the cookie
      */
-    private function _switchTemplate()
+    private function _switchTemplate($event)
     {
         if (isset($_COOKIE['portal_template'])) {
 
