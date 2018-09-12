@@ -3,12 +3,14 @@
 var gulp = require('gulp'),
     rename = require('gulp-rename'),
     uglify = require('gulp-uglify'),
+    concat = require('gulp-concat'),
     sass = require('gulp-sass');
 
 gulp.task('livepreview_js', function() {
-    return gulp.src('src/LivePreview.js')
+    return gulp.src(['node_modules/js-cookie/src/js.cookie.js','src/LivePreview.js'])
         .pipe(uglify())
-        .pipe(rename({ extname: '.min.js' }))
+        .pipe(concat('LivePreview.min.js'))
+        // .pipe(rename({ extname: '.min.js' }))
         .pipe(gulp.dest('livepreview/dist/'));
 });
 

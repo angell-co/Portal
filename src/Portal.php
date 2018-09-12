@@ -16,6 +16,8 @@ use angellco\portal\services\Targets as TargetsService;
 
 use Craft;
 use craft\base\Plugin;
+use craft\controllers\CategoriesController;
+use craft\controllers\EntriesController;
 use craft\helpers\Json;
 use craft\services\Plugins;
 use craft\events\PluginEvent;
@@ -92,6 +94,23 @@ class Portal extends Plugin
                 }
             }
         );
+
+        // When entry / category is previewed we can hijack the UA
+        Event::on(
+            EntriesController::class,
+            EntriesController::EVENT_PREVIEW_ENTRY,
+            function () {
+                $this->_fakeUserAgent();
+            }
+        );
+        Event::on(
+            CategoriesController::class,
+            CategoriesController::EVENT_PREVIEW_CATEGORY,
+            function () {
+                $this->_fakeUserAgent();
+            }
+        );
+
 
 //        // Register our site routes
 //        Event::on(
@@ -172,6 +191,26 @@ class Portal extends Plugin
             $view->registerJs('new Portal.LivePreview('.Json::encode($settings, JSON_UNESCAPED_UNICODE).');');
         }
 
+    }
+
+    /**
+     * Fakes the User Agent string for the request based on a cookie
+     */
+    private function _fakeUserAgent()
+    {
+        if (isset($_COOKIE['spoon_breakpoint'])) {
+
+            $breakpoint = $_COOKIE['spoon_breakpoint'];
+            $headers = Craft::$app->request->getHeaders();
+
+            if ($breakpoint === 'tablet') {
+                $headers->set('user-agent', 'Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53');
+            }
+
+            if ($breakpoint === 'mobile') {
+                $headers->set('user-agent', 'Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53');
+            }
+        }
     }
 
 }
