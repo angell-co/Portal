@@ -62,6 +62,13 @@ Portal.LivePreview = Garnish.Base.extend(
             $('<div class="btn" data-width="375" data-height="667" data-breakpoint="mobile">Mobile</div>').appendTo(this.$breakpointButtons);
 
             this.addListener($('.btn', this.$breakpointButtons), 'activate', 'changeBreakpoint');
+
+            // Set the window to the last breakpoint we have in the cookie
+            var currentBreakpoint = Cookies.get('spoon_breakpoint');
+            if (currentBreakpoint) {
+                this.$breakpointButtons.find('.btn[data-breakpoint="'+currentBreakpoint+'"]').click();
+            }
+
         }
 
         this.$toolbar.prependTo(Craft.livePreview.$iframeContainer);
