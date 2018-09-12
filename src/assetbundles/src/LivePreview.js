@@ -86,8 +86,10 @@ Portal.LivePreview = Garnish.Base.extend(
             h = $btn.data('height'),
             bp = $btn.data('breakpoint');
 
+        // Set the breakpoint cookie
         Cookies.set('spoon_breakpoint', bp);
 
+        // Change the size of the iframe
         if (w !== '' && h !== '') {
             Craft.livePreview.$iframe.addClass('portal-lp-iframe--resized');
             Craft.livePreview.$iframe.css({
@@ -99,6 +101,10 @@ Portal.LivePreview = Garnish.Base.extend(
         } else {
             this.resetIframe();
         }
+
+        // Force live preview to update
+        Craft.livePreview.forceUpdateIframe();
+
     },
 
     resetIframe: function()
