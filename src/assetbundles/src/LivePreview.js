@@ -70,9 +70,13 @@ Portal.LivePreview = Garnish.Base.extend(
             $('<div class="portal-btn portal-btn--mobile" data-width="375" data-height="667" data-breakpoint="mobile" />').appendTo($breakpointButtons);
 
 
+            // Orientation toggle
+            var $orientationToggle = $('<div class="btn" data-icon="refresh"></div>').appendTo(this.$toolbar);
+            this.addListener($orientationToggle, 'activate', 'toggleOrientation');
+
 
             // Target selector
-            var $targetMenuBtn = $('<div class="btn menubtn right">'+Craft.t('portal', 'Choose Target')+'</div>').appendTo(this.$toolbar),
+            var $targetMenuBtn = $('<div class="btn menubtn right no-outline">'+Craft.t('portal', 'Choose Target')+'</div>').appendTo(this.$toolbar),
                 $targetMenu = $('<div class="menu" />').appendTo(this.$toolbar),
                 $targetMenuUl = $('<ul />').appendTo($targetMenu);
 
@@ -124,8 +128,19 @@ Portal.LivePreview = Garnish.Base.extend(
             h = $btn.data('height'),
             bp = $btn.data('breakpoint');
 
+        $('.portal-btn', this.$toolbar).removeClass('portal-btn--active');
+        $btn.addClass('portal-btn--active');
+
         // Set the breakpoint cookie
         Cookies.set('portal_breakpoint', bp);
+
+        // Check the orientation and switch if needed
+        var orientation = Cookies.get('portal_orientation');
+        if (orientation && orientation === 'landscape') {
+            w = $btn.data('height');
+            h = $btn.data('width');
+            Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--landscape');
+        }
 
         // Change the size of the iframe
         if (w !== '' && h !== '') {
@@ -143,6 +158,40 @@ Portal.LivePreview = Garnish.Base.extend(
 
         // Force live preview to update
         Craft.livePreview.forceUpdateIframe();
+
+    },
+
+    toggleOrientation: function(ev)
+    {
+
+        // Track it in a cookie and toggle state classes
+        var orientation = Cookies.get('portal_orientation');
+
+        if (!orientation || orientation === 'portrait') {
+            orientation = 'landscape';
+            Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--landscape');
+        } else {
+            orientation = 'portrait';
+            Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--landscape');
+        }
+
+        Cookies.set('portal_orientation', orientation);
+
+
+        // Make the switch
+        var bp = Cookies.get('portal_breakpoint');
+
+        if (bp && bp !== 'desktop') {
+
+            var newH = Craft.livePreview.$iframe.outerWidth(),
+                newW = Craft.livePreview.$iframe.outerHeight();
+
+            Craft.livePreview.$iframe.css({
+                width: newW + 'px',
+                height: newH + 'px',
+                marginLeft: '-' + (newW / 2) + 'px'
+            });
+        }
 
     },
 
