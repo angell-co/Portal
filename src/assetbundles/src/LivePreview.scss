@@ -29,6 +29,10 @@
         background-size: 38px 38px;
       }
 
+      &--active:active::before {
+        background-size: 40px 40px;
+      }
+
       &--desktop::before {
         background-image: url(../svg/icons/iMac.svg);
       }

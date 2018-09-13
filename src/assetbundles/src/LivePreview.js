@@ -66,8 +66,8 @@ Portal.LivePreview = Garnish.Base.extend(
 
             // TODO make these configurable
             $('<div class="portal-btn portal-btn--desktop" data-width="" data-height="" data-breakpoint="desktop" />').appendTo($breakpointButtons);
-            $('<div class="portal-btn portal-btn--tablet" data-width="768" data-height="1024" data-breakpoint="tablet" />').appendTo($breakpointButtons);
-            $('<div class="portal-btn portal-btn--mobile" data-width="375" data-height="667" data-breakpoint="mobile" />').appendTo($breakpointButtons);
+            $('<div class="portal-btn portal-btn--tablet" data-width="768" data-height="1006" data-breakpoint="tablet" />').appendTo($breakpointButtons);
+            $('<div class="portal-btn portal-btn--mobile" data-width="375" data-height="653" data-breakpoint="mobile" />').appendTo($breakpointButtons);
 
 
             // Orientation toggle
