@@ -42,10 +42,10 @@ class LivePreviewAsset extends AssetBundle
         // define the relative path to CSS/JS files that should be registered with the page
         // when this asset bundle is registered
         $this->js = [
-            'LivePreview.min.js',
+            'js/LivePreview.min.js',
         ];
         $this->css = [
-            'LivePreview.min.css',
+            'css/LivePreview.min.css',
         ];
 
         parent::init();

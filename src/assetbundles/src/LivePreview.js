@@ -21,6 +21,7 @@ Portal.LivePreview = Garnish.Base.extend(
 {
 
     $toolbar: null,
+    targetMenuBtn: null,
 
     init: function(settings)
     {
@@ -54,28 +55,20 @@ Portal.LivePreview = Garnish.Base.extend(
     attachToolbar: function()
     {
 
-        Craft.livePreview.$iframe.addClass('portal-lp-iframe');
+        Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container');
 
         if (!this.$toolbar) {
 
-            this.$toolbar = $('<header class="portal-lp-toolbar header" />');
-
+            this.$toolbar = $('<header class="header" />');
 
             // Breakpoints
-            var $breakpointButtons = $('<div class="btngroup left" />').appendTo(this.$toolbar);
+            var $breakpointButtons = $('<div class="btngroup" />').appendTo(this.$toolbar);
 
             // TODO make these configurable
-            $('<div class="btn" data-width="" data-height="" data-breakpoint="desktop">'+Craft.t('portal', 'Desktop')+'</div>').appendTo($breakpointButtons);
-            $('<div class="btn" data-width="1024" data-height="768" data-breakpoint="tablet">'+Craft.t('portal', 'Tablet')+'</div>').appendTo($breakpointButtons);
-            $('<div class="btn" data-width="375" data-height="667" data-breakpoint="mobile">'+Craft.t('portal', 'Mobile')+'</div>').appendTo($breakpointButtons);
+            $('<div class="portal-btn portal-btn--desktop" data-width="" data-height="" data-breakpoint="desktop" />').appendTo($breakpointButtons);
+            $('<div class="portal-btn portal-btn--tablet" data-width="768" data-height="1024" data-breakpoint="tablet" />').appendTo($breakpointButtons);
+            $('<div class="portal-btn portal-btn--mobile" data-width="375" data-height="667" data-breakpoint="mobile" />').appendTo($breakpointButtons);
 
-            this.addListener($('.btn', $breakpointButtons), 'activate', 'changeBreakpoint');
-
-            // Set the window to the last breakpoint we have in the cookie
-            var currentBreakpoint = Cookies.get('portal_breakpoint');
-            if (currentBreakpoint) {
-                $breakpointButtons.find('.btn[data-breakpoint="'+currentBreakpoint+'"]').click();
-            }
 
 
             // Target selector
@@ -87,7 +80,7 @@ Portal.LivePreview = Garnish.Base.extend(
             $('<li><a data-template="">Primary Page</a></li>').appendTo($targetMenuUl);
             $('<li><a data-template="news/_entry">Something Else</a></li>').appendTo($targetMenuUl);
 
-            new Garnish.MenuBtn($targetMenuBtn,
+            this.targetMenuBtn = new Garnish.MenuBtn($targetMenuBtn,
             {
                 onOptionSelect: function(option)
                 {
@@ -97,6 +90,16 @@ Portal.LivePreview = Garnish.Base.extend(
                 }
             });
 
+
+            // Breakpoint button click handlers
+            this.addListener($('.portal-btn', $breakpointButtons), 'activate', 'changeBreakpoint');
+
+            // Set the window to the last breakpoint we have in the cookie
+            var currentBreakpoint = Cookies.get('portal_breakpoint');
+            if (currentBreakpoint) {
+                $breakpointButtons.find('.portal-btn[data-breakpoint="'+currentBreakpoint+'"]').click();
+            }
+
         }
 
         this.$toolbar.prependTo(Craft.livePreview.$iframeContainer);
@@ -105,7 +108,7 @@ Portal.LivePreview = Garnish.Base.extend(
 
     detachToolbar: function()
     {
-        Craft.livePreview.$iframe.removeClass('portal-lp-iframe');
+        Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container');
         this.resetIframe();
 
         if (this.$toolbar) {
@@ -126,7 +129,8 @@ Portal.LivePreview = Garnish.Base.extend(
 
         // Change the size of the iframe
         if (w !== '' && h !== '') {
-            Craft.livePreview.$iframe.addClass('portal-lp-iframe--resized');
+            this.targetMenuBtn.menu.$container.addClass('dark');
+            Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--resized');
             Craft.livePreview.$iframe.css({
                 width: w + 'px',
                 height: h + 'px',
@@ -144,7 +148,8 @@ Portal.LivePreview = Garnish.Base.extend(
 
     resetIframe: function()
     {
-        Craft.livePreview.$iframe.removeClass('portal-lp-iframe--resized');
+        this.targetMenuBtn.menu.$container.removeClass('dark');
+        Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--resized');
         Craft.livePreview.$iframe.css({
             width: '100%',
             height: '100%',

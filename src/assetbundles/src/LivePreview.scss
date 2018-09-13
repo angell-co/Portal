@@ -1,17 +1,84 @@
-.portal-lp-iframe {
-  top: 59px;
+.portal-lp-iframe-container {
+
+  .header {
+    padding: 14px 24px 13px;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 0;
+
+    .btngroup {
+      margin: -4px auto -41px auto;
+      width: 192px;
+    }
+
+    .portal-btn {
+      margin: 0 12px;
+      cursor: pointer;
+
+      &::before {
+        width: 40px;
+        height: 40px;
+        display: inline-block;
+        content: ' ';
+        background-size: 40px 40px;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      &:active::before {
+        background-size: 38px 38px;
+      }
+
+      &--desktop::before {
+        background-image: url(../svg/icons/iMac.svg);
+      }
+      &--tablet::before {
+        background-image: url(../svg/icons/iPad.svg);
+      }
+      &--mobile::before {
+        background-image: url(../svg/icons/iPhone.svg);
+      }
+    }
+  }
+
+  .lp-iframe {
+    top: 59px;
+  }
 
   &--resized {
-    top: 59px + 24px;
-    border-radius: 2px;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f9fafa));
-    background-image: linear-gradient(#fff, #f9fafa);
-    -webkit-box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.2);
-  }
-}
+    background: #222;
+    overflow: auto;
 
-.portal-lp-toolbar {
-  padding: 14px 24px 13px;
-  background: rgba(0, 0, 0, 0.03);
+
+    .header {
+      background: rgba(255, 255, 255, 0.06);
+
+      .portal-btn {
+
+      }
+
+      .portal-btn--desktop::before {
+        background-image: url(../svg/icons/iMac-white.svg);
+      }
+      .portal-btn--tablet::before {
+        background-image: url(../svg/icons/iPad-white.svg);
+      }
+      .portal-btn--mobile::before {
+        background-image: url(../svg/icons/iPhone-white.svg);
+      }
+
+    }
+
+    .lp-iframe {
+      top: 59px + 24px;
+      margin-bottom: 24px;
+      border-radius: 2px;
+
+      background: #fff !important;
+      background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f9fafa));
+      background-image: linear-gradient(#fff, #f9fafa);
+      -webkit-box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.2);
+    }
+  }
+
 }
