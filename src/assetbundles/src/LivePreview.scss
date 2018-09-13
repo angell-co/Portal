@@ -1,5 +1,6 @@
 .portal-lp-iframe-container {
 
+  // Toolbar
   .header {
     padding: 14px 24px 13px;
     background: rgba(0, 0, 0, 0.03);
@@ -45,14 +46,22 @@
     }
   }
 
+  // The iframe
   .lp-iframe {
     top: 59px;
   }
 
+  // Hide device mask for desktop
+  .portal-device-mask {
+    display: none;
+  }
+
+  // Active state of mobile or tablet mode
   &--resized {
     background: #222;
     overflow: auto;
 
+    // Toolbar
     .header {
       background: rgba(255, 255, 255, 0.06);
 
@@ -87,10 +96,11 @@
 
     }
 
+    // The iframe
     .lp-iframe {
-      top: 59px + 24px;
+      z-index: 2;
+      top: 182px;
       margin-bottom: 24px;
-      border-radius: 2px;
 
       background: #fff !important;
       background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f9fafa));
@@ -98,8 +108,29 @@
       -webkit-box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.2);
       box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.2);
     }
+
+    // Device mask - mobile
+    .portal-device-mask {
+      display: block;
+      position: absolute;
+      z-index: 1;
+
+      top: 83px;
+      left: 50%;
+      margin-left: -213px;
+
+      width: 426px;
+      height: 853px;
+
+      background-image: url(../svg/iPhone-large.svg);
+      background-repeat: no-repeat;
+
+      transition-duration: .3s;
+    }
+
   }
 
+  // Landscape mode
   &--landscape {
     .header {
 
@@ -110,6 +141,12 @@
         transition-duration: .3s;
       }
 
+    }
+
+    .portal-device-mask {
+      top: -57px;
+      -webkit-transform: rotate(-90deg);
+      transform: rotate(-90deg);
     }
   }
 

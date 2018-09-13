@@ -21,6 +21,8 @@ Portal.LivePreview = Garnish.Base.extend(
 {
 
     $toolbar: null,
+    $deviceMask: null,
+
     targetMenuBtn: null,
 
     init: function(settings)
@@ -67,7 +69,7 @@ Portal.LivePreview = Garnish.Base.extend(
             // TODO make these configurable
             $('<div class="portal-btn portal-btn--desktop" data-width="" data-height="" data-breakpoint="desktop" />').appendTo($breakpointButtons);
             $('<div class="portal-btn portal-btn--tablet" data-width="768" data-height="1006" data-breakpoint="tablet" />').appendTo($breakpointButtons);
-            $('<div class="portal-btn portal-btn--mobile" data-width="375" data-height="653" data-breakpoint="mobile" />').appendTo($breakpointButtons);
+            $('<div class="portal-btn portal-btn--mobile" data-width="376" data-height="653" data-breakpoint="mobile" />').appendTo($breakpointButtons);
 
 
             // Orientation toggle
@@ -107,6 +109,17 @@ Portal.LivePreview = Garnish.Base.extend(
         }
 
         this.$toolbar.prependTo(Craft.livePreview.$iframeContainer);
+
+
+        // Device mask
+        this.$deviceMask = $('<div class="portal-device-mask" />');
+
+        if (currentBreakpoint) {
+            this.$deviceMask.addClass('portal-device-mask--'+currentBreakpoint);
+        }
+
+        this.$deviceMask.appendTo(Craft.livePreview.$iframeContainer);
+
 
     },
 
@@ -186,11 +199,11 @@ Portal.LivePreview = Garnish.Base.extend(
             var newH = Craft.livePreview.$iframe.outerWidth(),
                 newW = Craft.livePreview.$iframe.outerHeight();
 
-            Craft.livePreview.$iframe.css({
+            Craft.livePreview.$iframe.fadeOut(10).delay(350).css({
                 width: newW + 'px',
                 height: newH + 'px',
                 marginLeft: '-' + (newW / 2) + 'px'
-            });
+            }).fadeIn(100);
         }
 
     },
