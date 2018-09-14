@@ -214,6 +214,7 @@ Portal.LivePreview = Garnish.Base.extend(
             var newH = Craft.livePreview.$iframe.outerWidth(),
                 newW = Craft.livePreview.$iframe.outerHeight();
 
+            // TODO rework this so we spin the iframe first
             Craft.livePreview.$iframe.fadeOut(10).delay(350).css({
                 width: newW + 'px',
                 height: newH + 'px',
