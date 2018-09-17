@@ -24,6 +24,7 @@ Portal.LivePreview = Garnish.Base.extend(
     $deviceMask: null,
 
     targetMenuBtn: null,
+    rotatingTimeout: null,
 
     init: function(settings)
     {
@@ -192,6 +193,15 @@ Portal.LivePreview = Garnish.Base.extend(
     toggleOrientation: function(ev)
     {
 
+        var $btn = $(ev.target);
+
+        if ($btn.data('portal-working')) {
+            return;
+        }
+
+        $btn.data('portal-working', true);
+
+
         // Track it in a cookie and toggle state classes
         var orientation = Cookies.get('portal_orientation');
 
@@ -211,15 +221,31 @@ Portal.LivePreview = Garnish.Base.extend(
 
         if (bp && bp !== 'desktop') {
 
-            var newH = Craft.livePreview.$iframe.outerWidth(),
-                newW = Craft.livePreview.$iframe.outerHeight();
+            clearTimeout(this.rotatingTimeout);
+            Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--rotating');
 
-            // TODO rework this so we spin the iframe first
-            Craft.livePreview.$iframe.fadeOut(10).delay(350).css({
-                width: newW + 'px',
-                height: newH + 'px',
-                marginLeft: '-' + (newW / 2) + 'px'
-            }).fadeIn(100);
+            this.rotatingTimeout = setTimeout(function() {
+
+                var w = Craft.livePreview.$iframe.outerWidth(),
+                    h = Craft.livePreview.$iframe.outerHeight();
+
+                // Check actual and intended orientation line up, if not then invert
+                if ((orientation === 'portrait' && w > h) || orientation === 'landscape' && w < h) {
+                    Craft.livePreview.$iframe.css({
+                        width: h + 'px',
+                        height: w + 'px',
+                        marginLeft: '-' + (h / 2) + 'px'
+                    });
+                }
+
+                Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--rotating');
+
+                $btn.data('portal-working', false);
+
+            }, 350);
+
+        } else {
+            $btn.data('portal-working', false);
         }
 
     },

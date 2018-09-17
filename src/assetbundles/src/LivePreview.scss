@@ -111,6 +111,9 @@
       background-image: linear-gradient(#fff, #f9fafa);
       -webkit-box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.2);
       box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.2);
+
+      opacity: 1;
+      transition: opacity .3s;
     }
 
     // Device mask - mobile
@@ -156,8 +159,6 @@
   }
 
 
-
-
   // Landscape mode
   &--landscape {
 
@@ -172,6 +173,7 @@
       }
 
     }
+
 
     // Device mask - mobile
     .portal-device-mask {
@@ -188,6 +190,41 @@
       // Device mask - tablet
       .portal-device-mask {
         margin-left: -((841px/2)+2);
+      }
+    }
+
+  }
+
+
+  // Whilst rotating the iframe mid animation
+  &--rotating {
+
+    .lp-iframe {
+      -webkit-transform: rotate(90deg);
+      transform: rotate(90deg);
+      opacity: 0.3;
+      top: 320px;
+
+      transition: transform .3s, opacity .3s;
+    }
+
+    &.portal-lp-iframe-container--landscape {
+      .lp-iframe {
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+        top: 42px;
+      }
+    }
+
+    &.portal-lp-iframe-container--tablet {
+      .lp-iframe {
+        top: 327px;
+      }
+
+      &.portal-lp-iframe-container--landscape {
+        .lp-iframe {
+          top: 65px;
+        }
       }
     }
 
