@@ -32,17 +32,32 @@ Portal.LivePreview = Garnish.Base.extend(
         // We always want to load with the default page template
         Cookies.remove('portal_template');
 
-        // Bind to the live preview enter event
+        // Bind to the live preview events
         Garnish.on(Craft.LivePreview, 'enter', $.proxy(function(ev)
         {
             this.onEnter(ev)
+        }, this));
+
+        Garnish.on(Craft.LivePreview, 'exit', $.proxy(function(ev)
+        {
+            this.onExit(ev)
         }, this));
 
     },
 
     onEnter: function(ev)
     {
+        this.addListener(Craft.livePreview.$editor, 'resize', 'toggleToolbar');
+        this.toggleToolbar();
+    },
 
+    onExit: function(ev)
+    {
+        this.removeListener(Craft.livePreview.$editor, 'resize');
+    },
+
+    toggleToolbar: function()
+    {
         if (Craft.livePreview.$iframeContainer.outerWidth() > 1024) {
 
             this.attachToolbar();
@@ -52,7 +67,6 @@ Portal.LivePreview = Garnish.Base.extend(
             this.detachToolbar();
 
         }
-
     },
 
     attachToolbar: function()
@@ -109,27 +123,41 @@ Portal.LivePreview = Garnish.Base.extend(
 
         }
 
-        this.$toolbar.prependTo(Craft.livePreview.$iframeContainer);
-
 
         // Device mask
-        this.$deviceMask = $('<div class="portal-device-mask" />');
+        if (!this.$deviceMask) {
+            this.$deviceMask = $('<div class="portal-device-mask" />');
+        }
+
+
+        // Add to DOM
+        this.$toolbar.prependTo(Craft.livePreview.$iframeContainer);
         this.$deviceMask.appendTo(Craft.livePreview.$iframeContainer);
 
+
+        // Set current state
         if (currentBreakpoint && currentBreakpoint === 'tablet') {
             Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--tablet');
         }
 
+        var currentOrientation = Cookies.get('portal_orientation');
+        if (currentOrientation && currentOrientation === 'landscape') {
+            Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--landscape');
+        }
 
     },
 
     detachToolbar: function()
     {
         Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container');
+        Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--landscape');
         this.resetIframe();
 
         if (this.$toolbar) {
             this.$toolbar.detach();
+        }
+        if (this.$deviceMask) {
+            this.$deviceMask.detach();
         }
     },
 
