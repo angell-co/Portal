@@ -8,36 +8,35 @@
  * @copyright Copyright (c) 2018 Angell & Co
  */
 
-namespace angellco\portal\services;
+namespace angellco\portal\variables;
 
 use angellco\portal\Portal;
 
 use Craft;
-use craft\base\Component;
 
 /**
- * Targets Service
+ * Portal Variable
  *
- * All of your plugin’s business logic should go in services, including saving data,
- * retrieving data, etc. They provide APIs that your controllers, template variables,
- * and other plugins can interact with.
+ * Craft allows plugins to provide their own template variables, accessible from
+ * the {{ craft }} global variable (e.g. {{ craft.foo }}).
  *
- * https://craftcms.com/docs/plugins/services
+ * https://craftcms.com/docs/plugins/variables
  *
  * @author    Angell & Co
  * @package   Portal
  * @since     0.1.0
  */
-class Targets extends Component
+class PortalVariable
 {
     // Public Methods
     // =========================================================================
 
     /**
-     * @return mixed
+     * @return \angellco\portal\services\Targets
      */
-    public function getAll()
+    public function targets()
     {
-        return [];
+        return Portal::$plugin->targets;
     }
+
 }

@@ -37,42 +37,18 @@ use craft\web\Controller;
  */
 class TargetsController extends Controller
 {
-
-    // Protected Properties
-    // =========================================================================
-
-    /**
-     * @var    bool|array Allows anonymous access to this controller's actions.
-     *         The actions must be in 'kebab-case'
-     * @access protected
-     */
-    protected $allowAnonymous = ['index', 'do-something'];
-
     // Public Methods
     // =========================================================================
 
     /**
-     * Handle a request going to our plugin's index action URL,
-     * e.g.: actions/portal/targets
-     *
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $result = 'Welcome to the TargetsController actionIndex() method';
-
-        return $result;
-    }
-
-    /**
      * Handle a request going to our plugin's actionDoSomething URL,
-     * e.g.: actions/portal/targets/do-something
+     * e.g.: actions/portal/targets/edit-target
      *
      * @return mixed
      */
-    public function actionDoSomething()
+    public function actionEditTarget()
     {
-        $result = 'Welcome to the TargetsController actionDoSomething() method';
+        $result = 'Welcome to the TargetsController actionEditTarget() method';
 
         return $result;
     }

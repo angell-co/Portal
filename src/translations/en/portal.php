@@ -26,5 +26,9 @@ return [
     'Tablet' => 'Tablet',
     'Mobile' => 'Mobile',
     'Choose Target' => 'Choose Target',
-    'Targets' => 'Targets'
+    'Target Name' => 'Target Name',
+    'Live Preview Targets' => 'Live Preview Targets',
+    'New Target' => 'New Target',
+    'No targets exist yet.' => 'No targets exist yet.',
+    'Are you sure you want to delete “{name}”?' => 'Are you sure you want to delete “{name}”?',
 ];

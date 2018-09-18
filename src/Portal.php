@@ -13,6 +13,7 @@ namespace angellco\portal;
 use angellco\portal\assetbundles\livepreview\LivePreviewAsset;
 use angellco\portal\services\PortalService as PortalServiceService;
 use angellco\portal\services\Targets as TargetsService;
+use angellco\portal\variables\PortalVariable;
 
 use Craft;
 use craft\base\Plugin;
@@ -20,10 +21,11 @@ use craft\events\TemplateEvent;
 use craft\helpers\Json;
 use craft\services\Plugins;
 use craft\events\PluginEvent;
+use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\events\RegisterUrlRulesEvent;
-
 use craft\web\View;
+
 use yii\base\Event;
 
 /**
@@ -40,7 +42,6 @@ use yii\base\Event;
  * @package   Portal
  * @since     0.1.0
  *
- * @property  PortalServiceService $portalService
  * @property  TargetsService $targets
  */
 class Portal extends Plugin
@@ -85,6 +86,27 @@ class Portal extends Plugin
         parent::init();
         self::$plugin = $this;
 
+        // Register our variables
+        Event::on(
+            CraftVariable::class,
+            CraftVariable::EVENT_INIT,
+            function (Event $event) {
+                /** @var CraftVariable $variable */
+                $variable = $event->sender;
+                $variable->set('portal', PortalVariable::class);
+            }
+        );
+
+        // Register our CP routes
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_CP_URL_RULES,
+            function (RegisterUrlRulesEvent $event) {
+                $event->rules['portal/targets/new'] = ['template' => 'portal/targets/_edit'];
+                $event->rules['portal/targets/<targetId:\d+>'] = 'portal/targets/edit-target';
+            }
+        );
+
         // Register global CP resources after all plugins have loaded
         Event::on(
             Plugins::class,
@@ -113,7 +135,7 @@ class Portal extends Plugin
 
         }
 
-
+        // Log that the plugin is loaded
         Craft::info(
             Craft::t(
                 'portal',
