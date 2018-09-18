@@ -44,13 +44,13 @@
       }
 
       &--desktop::before {
-        background-image: url(../svg/icons/iMac.svg);
+        background-image: url(../svg/iMac.svg);
       }
       &--tablet::before {
-        background-image: url(../svg/icons/iPad.svg);
+        background-image: url(../svg/iPad.svg);
       }
       &--mobile::before {
-        background-image: url(../svg/icons/iPhone.svg);
+        background-image: url(../svg/iPhone.svg);
       }
     }
   }
@@ -98,13 +98,13 @@
       }
 
       .portal-lp-btn--desktop::before {
-        background-image: url(../svg/icons/iMac-white.svg);
+        background-image: url(../svg/iMac-white.svg);
       }
       .portal-lp-btn--tablet::before {
-        background-image: url(../svg/icons/iPad-white.svg);
+        background-image: url(../svg/iPad-white.svg);
       }
       .portal-lp-btn--mobile::before {
-        background-image: url(../svg/icons/iPhone-white.svg);
+        background-image: url(../svg/iPhone-white.svg);
       }
 
     }
@@ -139,7 +139,7 @@
       width: 426px;
       height: 853px;
 
-      background-image: url(../svg/iPhone-large.svg);
+      background-image: url(../svg/iPhone.svg);
       background-repeat: no-repeat;
 
       transition: transform .3s;
@@ -156,7 +156,7 @@
 
       // Device mask - tablet
       .portal-device-mask {
-        background-image: url(../svg/iPad-large.svg);
+        background-image: url(../svg/iPad.svg);
 
         margin-left: -(841px / 2);
 

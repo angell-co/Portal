@@ -141,7 +141,7 @@ Portal.LivePreview = Garnish.Base.extend(
         }
 
         var currentOrientation = Cookies.get('portal_orientation');
-        if (currentOrientation && currentOrientation === 'landscape') {
+        if ((currentBreakpoint && currentBreakpoint !== 'desktop') && (currentOrientation && currentOrientation === 'landscape')) {
             Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--landscape');
         }
 
