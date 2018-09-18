@@ -97,20 +97,21 @@ class Install extends Migration
     {
         $tablesCreated = false;
 
-    // portal_target table
-        $tableSchema = Craft::$app->db->schema->getTableSchema('{{%portal_target}}');
+        // portal_targets table
+        $tableSchema = Craft::$app->db->schema->getTableSchema('{{%portal_targets}}');
         if ($tableSchema === null) {
             $tablesCreated = true;
             $this->createTable(
-                '{{%portal_target}}',
+                '{{%portal_targets}}',
                 [
-                    'id' => $this->primaryKey(),
+                    'id'          => $this->primaryKey(),
                     'dateCreated' => $this->dateTime()->notNull(),
                     'dateUpdated' => $this->dateTime()->notNull(),
-                    'uid' => $this->uid(),
-                // Custom columns in the table
-                    'siteId' => $this->integer()->notNull(),
-                    'some_field' => $this->string(255)->notNull()->defaultValue(''),
+                    'uid'         => $this->uid(),
+                    'name'        => $this->string()->notNull()->defaultValue(''),
+                    'template'    => $this->string(500)->defaultValue(''),
+                    'context'     => $this->string()->notNull()->defaultValue('global'),
+                    'siteId'      => $this->integer()->null(),
                 ]
             );
         }
@@ -125,24 +126,18 @@ class Install extends Migration
      */
     protected function createIndexes()
     {
-    // portal_target table
+        // portal_targets table
         $this->createIndex(
             $this->db->getIndexName(
-                '{{%portal_target}}',
-                'some_field',
+                '{{%portal_targets}}',
+                ['name','template','context','siteId'],
                 true
             ),
-            '{{%portal_target}}',
-            'some_field',
+            '{{%portal_targets}}',
+            ['template','context','siteId'],
             true
         );
-        // Additional commands depending on the db driver
-        switch ($this->driver) {
-            case DbConfig::DRIVER_MYSQL:
-                break;
-            case DbConfig::DRIVER_PGSQL:
-                break;
-        }
+
     }
 
     /**
@@ -152,10 +147,10 @@ class Install extends Migration
      */
     protected function addForeignKeys()
     {
-    // portal_target table
+        // portal_targets table
         $this->addForeignKey(
-            $this->db->getForeignKeyName('{{%portal_target}}', 'siteId'),
-            '{{%portal_target}}',
+            $this->db->getForeignKeyName('{{%portal_targets}}', 'siteId'),
+            '{{%portal_targets}}',
             'siteId',
             '{{%sites}}',
             'id',
@@ -180,7 +175,7 @@ class Install extends Migration
      */
     protected function removeTables()
     {
-    // portal_target table
-        $this->dropTableIfExists('{{%portal_target}}');
+        // portal_targets table
+        $this->dropTableIfExists('{{%portal_targets}}');
     }
 }

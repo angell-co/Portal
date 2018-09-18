@@ -33,11 +33,25 @@ class Target extends Model
     // =========================================================================
 
     /**
-     * Some model attribute
-     *
      * @var string
      */
-    public $someAttribute = 'Some Default';
+    public $name;
+
+    /**
+     * @var string
+     */
+    public $template;
+
+    /**
+     * @var string
+     */
+    public $context;
+
+    /**
+     * @var int
+     */
+    public $siteId;
+
 
     // Public Methods
     // =========================================================================
@@ -52,11 +66,18 @@ class Target extends Model
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            ['someAttribute', 'string'],
-            ['someAttribute', 'default', 'value' => 'Some Default'],
+            [
+                [
+                    'name',
+                    'template',
+                    'context',
+                ],
+                'string',
+            ],
+            [['siteId'], 'number', 'min' => 1],
         ];
     }
 }
