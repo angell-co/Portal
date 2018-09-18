@@ -10,12 +10,17 @@
     top: 0;
     width: inherit;
 
+    // Only show this when resized (non-desktop breakpoints)
+    .portal-lp-orientation-btn {
+      display: none;
+    }
+
     .btngroup {
       margin: -4px auto -41px auto;
       width: 192px;
     }
 
-    .portal-btn {
+    .portal-lp-btn {
       margin: 0 12px;
       cursor: pointer;
 
@@ -78,7 +83,11 @@
         }
       }
 
-      .portal-btn {
+      .portal-lp-orientation-btn {
+        display: inline-block;
+      }
+
+      .portal-lp-btn {
         opacity: 0.65;
         transition-duration: .1s;
 
@@ -88,13 +97,13 @@
         }
       }
 
-      .portal-btn--desktop::before {
+      .portal-lp-btn--desktop::before {
         background-image: url(../svg/icons/iMac-white.svg);
       }
-      .portal-btn--tablet::before {
+      .portal-lp-btn--tablet::before {
         background-image: url(../svg/icons/iPad-white.svg);
       }
-      .portal-btn--mobile::before {
+      .portal-lp-btn--mobile::before {
         background-image: url(../svg/icons/iPhone-white.svg);
       }
 
@@ -165,8 +174,8 @@
     // Toolbar
     .header {
 
-      .portal-btn--tablet::before,
-      .portal-btn--mobile::before {
+      .portal-lp-btn--tablet::before,
+      .portal-lp-btn--mobile::before {
         -webkit-transform: rotate(-90deg);
         transform: rotate(-90deg);
         transition-duration: .3s;
