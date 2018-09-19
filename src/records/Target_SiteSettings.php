@@ -10,29 +10,29 @@
 
 namespace angellco\portal\records;
 
-use angellco\portal\Portal;
+use angellco\portal\models\Target;
 
 use Craft;
 use craft\db\ActiveRecord;
+use craft\models\Site;
 use yii\db\ActiveQueryInterface;
 
 /**
- * Class Target record.
+ * Class Target_SiteSettings record.
  *
  * @property int $id ID
- * @property string $name Name
- * @property string $context Context
-
- * @property Target_SiteSettings[] $siteSettings Site settings
- * @property Target[] $targets Targets
+ * @property int $targetId Target ID
+ * @property int $siteId Site ID
+ * @property string $template Template
+ * @property Target $target Target
+ * @property Site $site Site
  *
  * @author    Angell & Co
  * @package   Portal
  * @since     0.1.0
  */
-class Target extends ActiveRecord
+class Target_SiteSettings extends ActiveRecord
 {
-
     // Public Methods
     // =========================================================================
 
@@ -42,17 +42,26 @@ class Target extends ActiveRecord
      */
     public static function tableName(): string
     {
-        return '{{%portal_targets}}';
+        return '{{%portal_targets_sites}}';
     }
 
     /**
-     * Returns the target’s site settings.
+     * Returns the associated target.
      *
      * @return ActiveQueryInterface The relational query object.
      */
-    public function getSiteSettings(): ActiveQueryInterface
+    public function getGroup(): ActiveQueryInterface
     {
-        return $this->hasMany(Target_SiteSettings::class, ['targetId' => 'id']);
+        return $this->hasOne(Target::class, ['id' => 'targetId']);
     }
 
+    /**
+     * Returns the associated site.
+     *
+     * @return ActiveQueryInterface The relational query object.
+     */
+    public function getSite(): ActiveQueryInterface
+    {
+        return $this->hasOne(Site::class, ['id' => 'siteId']);
+    }
 }
