@@ -32,6 +32,7 @@ use craft\db\Migration;
  */
 class Install extends Migration
 {
+
     // Public Properties
     // =========================================================================
 
@@ -101,19 +102,29 @@ class Install extends Migration
         $tableSchema = Craft::$app->db->schema->getTableSchema('{{%portal_targets}}');
         if ($tableSchema === null) {
             $tablesCreated = true;
-            $this->createTable(
-                '{{%portal_targets}}',
-                [
-                    'id'          => $this->primaryKey(),
-                    'dateCreated' => $this->dateTime()->notNull(),
-                    'dateUpdated' => $this->dateTime()->notNull(),
-                    'uid'         => $this->uid(),
-                    'name'        => $this->string()->notNull()->defaultValue(''),
-                    'template'    => $this->string(500)->defaultValue(''),
-                    'context'     => $this->string()->notNull()->defaultValue('global'),
-                    'siteId'      => $this->integer()->null(),
-                ]
-            );
+            $this->createTable('{{%portal_targets}}', [
+                'id'          => $this->primaryKey(),
+                'name'        => $this->string()->notNull()->defaultValue(''),
+                'context'     => $this->string()->notNull()->defaultValue('global'),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid'         => $this->uid(),
+            ]);
+        }
+
+        // portal_targets_sites table
+        $tableSchema = Craft::$app->db->schema->getTableSchema('{{%portal_targets_sites}}');
+        if ($tableSchema === null) {
+            $tablesCreated = true;
+            $this->createTable('{{%portal_targets_sites}}', [
+                'id'          => $this->primaryKey(),
+                'targetId'     => $this->integer()->notNull(),
+                'siteId'      => $this->integer()->null(),
+                'template'    => $this->string(500),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid'         => $this->uid(),
+            ]);
         }
 
         return $tablesCreated;
@@ -126,17 +137,10 @@ class Install extends Migration
      */
     protected function createIndexes()
     {
-        // portal_targets table
-        $this->createIndex(
-            $this->db->getIndexName(
-                '{{%portal_targets}}',
-                ['name','template','context','siteId'],
-                true
-            ),
-            '{{%portal_targets}}',
-            ['template','context','siteId'],
-            true
-        );
+        $this->createIndex(null, '{{%portal_targets}}', ['name'], true);
+        $this->createIndex(null, '{{%portal_targets_sites}}', ['targetId', 'siteId'], true);
+        $this->createIndex(null, '{{%portal_targets_sites}}', ['targetId', 'siteId', 'template'], true);
+        $this->createIndex(null, '{{%portal_targets_sites}}', ['siteId'], false);
 
     }
 
@@ -147,16 +151,8 @@ class Install extends Migration
      */
     protected function addForeignKeys()
     {
-        // portal_targets table
-        $this->addForeignKey(
-            $this->db->getForeignKeyName('{{%portal_targets}}', 'siteId'),
-            '{{%portal_targets}}',
-            'siteId',
-            '{{%sites}}',
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
+        $this->addForeignKey(null, '{{%portal_targets_sites}}', ['targetId'], '{{%portal_targets}}', ['id'], 'CASCADE', null);
+        $this->addForeignKey(null, '{{%portal_targets_sites}}', ['siteId'], '{{%sites}}', ['id'], 'CASCADE', 'CASCADE');
     }
 
     /**
@@ -175,7 +171,8 @@ class Install extends Migration
      */
     protected function removeTables()
     {
-        // portal_targets table
+        $this->dropTableIfExists('{{%portal_targets_sites}}');
         $this->dropTableIfExists('{{%portal_targets}}');
     }
+
 }
