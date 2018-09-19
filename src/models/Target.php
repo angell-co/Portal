@@ -11,17 +11,16 @@
 namespace angellco\portal\models;
 
 use angellco\portal\Portal;
+use angellco\portal\records\Target as TargetRecord;
 
 use Craft;
 use craft\base\Model;
+use craft\validators\UniqueValidator;
 
 /**
  * Target Model
  *
- * Models are containers for data. Just about every time information is passed
- * between services, controllers, and templates in Craft, it’s passed via a model.
- *
- * https://craftcms.com/docs/plugins/models
+ * @property Target_SiteSettings[] $siteSettings Site-specific settings
  *
  * @author    Angell & Co
  * @package   Portal
@@ -33,51 +32,97 @@ class Target extends Model
     // =========================================================================
 
     /**
-     * @var string
+     * @var int|null ID
+     */
+    public $id;
+
+    /**
+     * @var string|null Name
      */
     public $name;
 
     /**
-     * @var string
-     */
-    public $template;
-
-    /**
-     * @var string
+     * @var string|null Context
      */
     public $context;
 
     /**
-     * @var int
+     * @var
      */
-    public $siteId;
+    private $_siteSettings;
 
 
     // Public Methods
     // =========================================================================
 
     /**
-     * Returns the validation rules for attributes.
-     *
-     * Validation rules are used by [[validate()]] to check if attribute values are valid.
-     * Child classes may override this method to declare different validation rules.
-     *
-     * More info: http://www.yiiframework.com/doc-2.0/guide-input-validation.html
-     *
-     * @return array
+     * @inheritdoc
      */
     public function rules(): array
     {
         return [
-            [
-                [
-                    'name',
-                    'template',
-                    'context',
-                ],
-                'string',
-            ],
-            [['siteId'], 'number', 'min' => 1],
+            [['id'], 'number', 'integerOnly' => true],
+            [['name'], UniqueValidator::class, 'targetClass' => TargetRecord::class],
+            [['name', 'context', 'siteSettings'], 'required'],
+            [['name'], 'string', 'max' => 255],
+            [['siteSettings'], 'validateSiteSettings'],
         ];
+    }
+
+    /**
+     * Validates the targets site settings.
+     */
+    public function validateTargetSite()
+    {
+        foreach ($this->getSiteSettings() as $i => $siteSetting) {
+            if (!$siteSetting->validate()) {
+                $this->addModelErrors($siteSetting, "siteSetting[{$i}]");
+            }
+        }
+    }
+
+    /**
+     * Use the translated target's name as the string representation.
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return Craft::t('site', $this->name);
+    }
+
+    /**
+     * Returns the targets's site-specific settings.
+     *
+     * @return Target_SiteSettings[]
+     */
+    public function getSiteSettings(): array
+    {
+        if ($this->_siteSettings !== null) {
+            return $this->_siteSettings;
+        }
+
+        if (!$this->id) {
+            return [];
+        }
+
+        // Set them with setSiteSettings() so setTarget() gets called on them
+        $this->setSiteSettings(ArrayHelper::index(Portal::$plugin->targets->getTargetSiteSettings($this->id), 'siteId'));
+
+        return $this->_siteSettings;
+    }
+
+    /**
+     * Sets the target's site-specific settings.
+     *
+     * @param Target_SiteSettings[] $siteSettings
+     */
+    public function setSiteSettings(array $siteSettings)
+    {
+        $this->_siteSettings = $siteSettings;
+
+        foreach ($this->_siteSettings as $settings) {
+            $settings->setTarget($this);
+        }
     }
 }
