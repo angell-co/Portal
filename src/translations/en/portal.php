@@ -27,8 +27,12 @@ return [
     'Mobile' => 'Mobile',
     'Choose Target' => 'Choose Target',
     'Target Name' => 'Target Name',
+    'Targets' => 'Targets',
     'Live Preview Targets' => 'Live Preview Targets',
     'New Target' => 'New Target',
     'No targets exist yet.' => 'No targets exist yet.',
     'Are you sure you want to delete “{name}”?' => 'Are you sure you want to delete “{name}”?',
+    'Create a new target' => 'Create a new target',
+    'Couldn’t save the target.' => 'Couldn’t save the target.',
+    'Target saved.' => 'Target saved.',
 ];
