@@ -1,1 +1,94 @@
-EDIT
+{% extends "_layouts/cp" %}
+
+{% set fullPageForm = true %}
+
+{% import "_includes/forms" as forms %}
+
+
+{% block content %}
+    <input type="hidden" name="action" value="portal/targets/save-target">
+    {{ redirectInput('portal/targets') }}
+
+    {% if target.id %}<input type="hidden" name="targetId" value="{{ target.id }}">{% endif %}
+
+    {{ forms.textField({
+        first: true,
+        label: "Name"|t('app'),
+        instructions: "What this target will be called in the CP."|t('portal'),
+        id: 'name',
+        name: 'name',
+        value: target.name,
+        errors: target.getErrors('name'),
+        autofocus: true,
+        required: true,
+    }) }}
+
+    {# CONTEXT #}
+
+    {#{{ forms.textField({#}
+        {#label: "Handle"|t('app'),#}
+        {#instructions: "How you’ll refer to this category group in the templates."|t('app'),#}
+        {#id: 'handle',#}
+        {#class: 'code',#}
+        {#name: 'handle',#}
+        {#value: categoryGroup.handle,#}
+        {#errors: categoryGroup.getErrors('handle'),#}
+        {#required: true#}
+    {#}) }}#}
+
+    <hr>
+
+    {% set siteRows = [] %}
+    {% set siteErrors = target.getErrors('siteSettings') %}
+
+    {% for site in craft.app.sites.getAllSites() %}
+        {% set siteSettings = target.siteSettings[site.id] ?? null %}
+        {% if siteSettings %}
+            {% for attribute, errors in siteSettings.getErrors() %}
+                {% set siteErrors = siteErrors|merge(errors) %}
+            {% endfor %}
+        {% endif %}
+        {% set siteRows = siteRows|merge({
+            (site.handle): {
+                heading: site.name|t('site'),
+                template: {
+                    value: siteSettings.template ?? null,
+                    hasErrors: siteSettings.hasErrors('template') ?? false,
+                }
+            }
+        }) %}
+    {% endfor %}
+
+    {{ forms.editableTableField({
+        label: "Site Settings"|t('app'),
+        instructions: "Configure the target’s site-specific settings."|t('app'),
+        id: 'sites',
+        name: 'sites',
+        cols: {
+            heading: {
+                type: 'heading',
+                heading: "Site"|t('app'),
+                class: 'thin'
+            },
+            template: {
+                type: 'singleline',
+                heading: "Template"|t('app'),
+                info: "Which template should be loaded this target is loaded."|t('portal'),
+                code: true
+            },
+        },
+        rows: siteRows,
+        staticRows: true,
+        errors: siteErrors|unique
+    }) }}
+
+{% endblock %}
+
+
+{% if brandNewTarget %}
+    {% js %}
+        {% for site in craft.app.sites.getAllSites() %}
+            new Craft.UriFormatGenerator('#name', '#sites tr[data-id="{{ site.handle }}"] textarea[name$="[template]"]');
+        {% endfor %}
+    {% endjs %}
+{% endif %}

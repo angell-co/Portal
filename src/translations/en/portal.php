@@ -35,4 +35,6 @@ return [
     'Create a new target' => 'Create a new target',
     'Couldn’t save the target.' => 'Couldn’t save the target.',
     'Target saved.' => 'Target saved.',
+    'What this target will be called in the CP.' => 'What this target will be called in the CP.',
+    'Which template should be loaded this target is loaded.' => 'Which template should be loaded this target is loaded.',
 ];

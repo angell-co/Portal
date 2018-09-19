@@ -195,8 +195,8 @@ class Targets extends Component
             $targetRecord = new TargetRecord();
         }
 
-        $targetRecord->name = $targetRecord->name;
-        $targetRecord->context = $targetRecord->context;
+        $targetRecord->name = $target->name;
+        $targetRecord->context = $target->context;
 
         // Get the site settings
         $allSiteSettings = $target->getSiteSettings();
