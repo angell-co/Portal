@@ -6,7 +6,7 @@ Brings enhanced Live Preview capabilities to Craft, including a device toggle an
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0-beta.23 or later.
+This plugin requires Craft CMS 3.0.15 or later.
 
 ## Installation
 
