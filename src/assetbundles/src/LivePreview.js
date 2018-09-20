@@ -24,13 +24,31 @@ Portal.LivePreview = Garnish.Base.extend(
     $deviceMask: null,
 
     targetMenuBtn: null,
+    targetOptions: [],
     rotatingTimeout: null,
 
     init: function(settings)
     {
 
+        this.setSettings(settings, Portal.LivePreview.defaults);
+
+
+        // Work out which targets we have available, if any
+        if (this.settings.context) {
+
+            $.each(this.settings.targets['global'], $.proxy(function(key, target) {
+                this.targetOptions.push(target);
+            }, this));
+
+            $.each(this.settings.targets[this.settings.context], $.proxy(function(key, target) {
+                this.targetOptions.push(target);
+            }, this));
+
+        }
+
         // We always want to load with the default page template
         Cookies.remove('portal_template');
+
 
         // Bind to the live preview events
         Garnish.on(Craft.LivePreview, 'enter', $.proxy(function(ev)
@@ -80,11 +98,9 @@ Portal.LivePreview = Garnish.Base.extend(
 
             // Breakpoints
             var $breakpointButtons = $('<div class="btngroup" />').appendTo(this.$toolbar);
-
-            // TODO make these configurable
-            $('<div class="portal-lp-btn portal-lp-btn--desktop" data-width="" data-height="" data-breakpoint="desktop" />').appendTo($breakpointButtons);
-            $('<div class="portal-lp-btn portal-lp-btn--tablet" data-width="768" data-height="1006" data-breakpoint="tablet" />').appendTo($breakpointButtons);
-            $('<div class="portal-lp-btn portal-lp-btn--mobile" data-width="375" data-height="653" data-breakpoint="mobile" />').appendTo($breakpointButtons);
+            $('<div class="portal-lp-btn portal-lp-btn--desktop" data-width="" data-height="" data-breakpoint="desktop" title="'+Craft.t('portal', 'Desktop')+'" />').appendTo($breakpointButtons);
+            $('<div class="portal-lp-btn portal-lp-btn--tablet" data-width="768" data-height="1006" data-breakpoint="tablet" title="'+Craft.t('portal', 'Tablet')+'" />').appendTo($breakpointButtons);
+            $('<div class="portal-lp-btn portal-lp-btn--mobile" data-width="375" data-height="653" data-breakpoint="mobile" title="'+Craft.t('portal', 'Mobile')+'" />').appendTo($breakpointButtons);
 
 
             // Orientation toggle
@@ -97,9 +113,26 @@ Portal.LivePreview = Garnish.Base.extend(
                 $targetMenu = $('<div class="menu" />').appendTo(this.$toolbar),
                 $targetMenuUl = $('<ul />').appendTo($targetMenu);
 
-            // TODO load up from the backend with correct context
+
             $('<li><a data-template="">Primary Page</a></li>').appendTo($targetMenuUl);
-            $('<li><a data-template="news/_entry">Something Else</a></li>').appendTo($targetMenuUl);
+
+            $.each(this.targetOptions, $.proxy(function(key, target) {
+
+                var targetSite = null;
+
+                $.each(target.siteSettings, $.proxy(function(key, siteSetting) {
+
+                    if (siteSetting.siteId == this.settings.siteId) {
+                        targetSite = siteSetting;
+                    }
+
+                }, this));
+
+                if (targetSite !== null) {
+                    $('<li><a data-template="' + targetSite.template + '">' + target.name + '</a></li>').appendTo($targetMenuUl);
+                }
+
+            }, this));
 
             this.targetMenuBtn = new Garnish.MenuBtn($targetMenuBtn,
             {
@@ -294,5 +327,13 @@ Portal.LivePreview = Garnish.Base.extend(
             left: 0,
             marginLeft: 0
         });
+    }
+
+},
+{
+    defaults: {
+        siteId: null,
+        targets: null,
+        context: null,
     }
 });

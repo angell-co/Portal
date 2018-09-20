@@ -101,7 +101,7 @@ class Portal extends Plugin
             Plugins::EVENT_AFTER_LOAD_PLUGINS,
             function () {
                 if ($this->isInstalled && !Craft::$app->plugins->doesPluginRequireDatabaseUpdate($this)) {
-                    $this->_loadGlobalCpResources();
+                    $this->_loadLivePreviewCpResources();
                 }
             }
         );
@@ -138,22 +138,87 @@ class Portal extends Plugin
     // =========================================================================
 
     /**
-     * Loads up the CP resources we need everywhere.
+     * Loads up the CP resources we need for Live Preview.
      *
      * @throws \yii\base\InvalidConfigException
      */
-    private function _loadGlobalCpResources()
+    private function _loadLivePreviewCpResources()
     {
         // Check the conditions are right to run
         if (Craft::$app->request->isCpRequest && !Craft::$app->request->getAcceptsJson())
         {
-            $view = Craft::$app->getView();
 
-            $view->registerAssetBundle(LivePreviewAsset::class);
+            // First of all, check we’re in a valid context
+            $segments = Craft::$app->request->getSegments();
 
-            $settings = [];
+            $context = false;
 
-            $view->registerJs('new Portal.LivePreview('.Json::encode($settings, JSON_UNESCAPED_UNICODE).');');
+            // Entries
+            if ( count($segments) >= 3 && $segments[0] == 'entries' )
+            {
+
+                if ($segments[2] == 'new')
+                {
+                    $section = Craft::$app->sections->getSectionByHandle($segments[1]);
+                }
+                else
+                {
+                    $entryId = explode('-',$segments[2])[0];
+                    $entry = Craft::$app->entries->getEntryById($entryId);
+
+                    if ($entry)
+                    {
+                        $section = $entry->getSection();
+                    }
+                }
+
+                if (isset($section) && $section) {
+                    $context = 'section:'.$section->id;
+                }
+
+
+
+            }
+            // Category groups
+            else if ( count($segments) >= 3 && $segments[0] == 'categories' )
+            {
+                $group = Craft::$app->categories->getGroupByHandle($segments[1]);
+                if ($group)
+                {
+                    $context = 'categoryGroup:'.$group->id;
+                }
+            }
+
+
+            // Then, if we are we can get the data we need and run
+            if ($context) {
+
+                // Work out the Site
+                $siteHandle = 'default';
+                if (count($segments) === 4) {
+                    $siteHandle = $segments[3];
+                }
+
+                $site = Craft::$app->getSites()->getSiteByHandle($siteHandle);
+
+                if (!$site) {
+                    throw new NotFoundHttpException('Invalid site handle: ' . $siteHandle);
+                }
+
+                $settings = [
+                    'siteId' => $site->id,
+                    'context' => $context,
+                    'targets' => $this->targets->getAllTargetsForLivePreview()
+                ];
+
+                // Register the AssetBundle
+                $view = Craft::$app->getView();
+
+                $view->registerAssetBundle(LivePreviewAsset::class);
+
+                $view->registerJs('new Portal.LivePreview('.Json::encode($settings, JSON_UNESCAPED_UNICODE).');');
+            }
+
         }
 
     }

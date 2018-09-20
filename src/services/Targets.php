@@ -78,7 +78,7 @@ class Targets extends Component
     /**
      * Returns all targets.
      *
-     * @return Target[]
+     * @return array
      */
     public function getAllTargets(): array
     {
@@ -100,6 +100,27 @@ class Targets extends Component
         $this->_fetchedAllTargets = true;
 
         return array_values($this->_targetsById);
+    }
+
+    /**
+     * Returns all the Targets grouped by context and with their Site settings
+     * set on them.
+     *
+     * @return array
+     */
+    public function getAllTargetsForLivePreview()
+    {
+
+        $targetsByContext = [];
+
+        /** @var Target $target */
+        foreach ($this->getAllTargets() as $target) {
+            $target->getSiteSettings();
+            $targetsByContext[$target->context][] = $target;
+        }
+
+        return $targetsByContext;
+
     }
 
     /**
@@ -418,9 +439,11 @@ class Targets extends Component
      * Creates a Target with attributes from a TargetRecord.
      *
      * @param TargetRecord|null $targetRecord
+     * @param bool              $withSiteSettings
+     *
      * @return Target|null
      */
-    private function _createTargetFromRecord(TargetRecord $targetRecord = null)
+    private function _createTargetFromRecord(TargetRecord $targetRecord = null, $withSiteSettings = false)
     {
         if (!$targetRecord) {
             return null;

@@ -50,7 +50,7 @@ class Target extends Model
     /**
      * @var array|null Site Settings
      */
-    private $_siteSettings;
+    public $siteSettings;
 
     /**
      * @var array|null Context Options
@@ -104,8 +104,8 @@ class Target extends Model
      */
     public function getSiteSettings(): array
     {
-        if ($this->_siteSettings !== null) {
-            return $this->_siteSettings;
+        if ($this->siteSettings !== null) {
+            return $this->siteSettings;
         }
 
         if (!$this->id) {
@@ -115,7 +115,7 @@ class Target extends Model
         // Set them with setSiteSettings() so setTarget() gets called on them
         $this->setSiteSettings(ArrayHelper::index(Portal::$plugin->targets->getTargetSiteSettings($this->id), 'siteId'));
 
-        return $this->_siteSettings;
+        return $this->siteSettings;
     }
 
     /**
@@ -125,15 +125,15 @@ class Target extends Model
      */
     public function setSiteSettings(array $siteSettings)
     {
-        $this->_siteSettings = $siteSettings;
+        $this->siteSettings = $siteSettings;
 
-        foreach ($this->_siteSettings as $settings) {
+        foreach ($this->siteSettings as $settings) {
             $settings->setTarget($this);
         }
     }
 
     /**
-     *
+     * Returns the name of the Target’s context.
      *
      * @return string|bool
      */
