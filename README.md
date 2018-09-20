@@ -2,7 +2,7 @@
 
 Brings enhanced Live Preview capabilities to Craft, including a device toggle and additional targets in the main Live Preview tool.
 
-![Screenshot](resources/img/plugin-logo.png)
+![Banner](resources/img/banner.png)
 
 ## Requirements
 
