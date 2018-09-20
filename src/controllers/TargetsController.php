@@ -78,6 +78,7 @@ class TargetsController extends Controller
 
         $variables = [];
 
+
         // Breadcrumbs
         $variables['crumbs'] = [
             [
@@ -94,6 +95,12 @@ class TargetsController extends Controller
             ]
         ];
 
+
+        // Context options
+        $variables['contextOptions'] = Portal::$plugin->targets->getContextOptions();
+
+
+        // Set up the model
         $variables['brandNewTarget'] = false;
 
         if ($targetId !== null) {

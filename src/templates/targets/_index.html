@@ -14,7 +14,7 @@
 #}
 
 {% extends "_layouts/cp" %}
-{% set title = "Live Preview Targets"|t('portal') %}
+{% set title = "Targets"|t('portal') %}
 
 {% block actionButton %}
     <a href="{{ url('portal/targets/new') }}" class="btn submit add icon">{{ "New Target"|t('portal') }}</a>
@@ -34,15 +34,15 @@
         {% if targets %}
             <table id="targets" class="data fullwidth collapsible">
                 <thead>
-                <th scope="col">{{ "Target Name"|t('portal') }}</th>
-                <th scope="col">{{ "Template"|t('app') }}</th>
+                <th scope="col">{{ "Name"|t('app') }}</th>
+                <th scope="col">{{ "Context"|t('portal') }}</th>
                 <td class="thin"></td>
                 </thead>
                 <tbody>
                 {% for target in targets %}
                     <tr data-id="{{ target.id }}" data-name="{{ target.name }}">
-                        <th scope="row" data-title="{{ 'Target Name'|t('portal') }}"><a href="{{ url('portal/targets/' ~ target.id) }}">{{ target.name|t('site') }}</a></th>
-                        <td class="code" data-title="{{ 'Template'|t('app') }}">{{ target.handle }}</td>
+                        <th scope="row" data-title="{{ 'Name'|t('app') }}"><a href="{{ url('portal/targets/' ~ target.id) }}">{{ target.name|t('site') }}</a></th>
+                        <td class="code" data-title="{{ 'Context'|t('portal') }}">{{ target.contextName }}</td>
                         <td class="thin"><a class="delete icon" title="{{ 'Delete'|t('app') }}"></a></td>
                     </tr>
                 {% endfor %}
@@ -56,7 +56,7 @@
     var adminTable = new Craft.AdminTable({
         tableSelector: '#targets',
         noItemsSelector: '#notargets',
-        deleteAction: 'portal/targets/delete',
+        deleteAction: 'portal/targets/delete-target',
         confirmDeleteMessage: '{{ "Are you sure you want to delete “{name}”?"|t('portal') }}',
     });
 {% endjs %}

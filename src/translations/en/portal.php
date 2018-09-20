@@ -26,9 +26,7 @@ return [
     'Tablet' => 'Tablet',
     'Mobile' => 'Mobile',
     'Choose Target' => 'Choose Target',
-    'Target Name' => 'Target Name',
     'Targets' => 'Targets',
-    'Live Preview Targets' => 'Live Preview Targets',
     'New Target' => 'New Target',
     'No targets exist yet.' => 'No targets exist yet.',
     'Are you sure you want to delete “{name}”?' => 'Are you sure you want to delete “{name}”?',
@@ -37,4 +35,6 @@ return [
     'Target saved.' => 'Target saved.',
     'What this target will be called in the CP.' => 'What this target will be called in the CP.',
     'Which template should be loaded this target is loaded.' => 'Which template should be loaded this target is loaded.',
+    'Where this target can be used in the CP.' => 'Where this target can be used in the CP.',
+    'Context' => 'Context',
 ];

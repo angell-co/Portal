@@ -20,6 +20,8 @@ use angellco\portal\errors\TargetNotFoundException;
 use Craft;
 use craft\base\Component;
 use craft\db\Query;
+use craft\models\CategoryGroup;
+use craft\models\Section;
 
 /**
  * Targets Service
@@ -162,6 +164,61 @@ class Targets extends Component
 
         return $siteSettings;
 
+    }
+
+    /**
+     *
+     *
+     * @return array
+     */
+    public function getContextOptions(): array
+    {
+        $return = [
+            'global' => [
+                'label' => 'Global',
+                'value' => 'global',
+            ]
+        ];
+
+        // Sections
+        $sections = Craft::$app->getSections()->getAllSections();
+        if ($sections) {
+
+            $return[] = ['optgroup' => Craft::t('app', 'Sections')];
+
+            /** @var Section $section */
+            foreach ($sections as $section) {
+
+                $id = 'section:'.$section->id;
+
+                $return[$id] = [
+                    'label' => $section->name,
+                    'value' => $id,
+                ];
+            }
+
+        }
+
+        // Category groups
+        $groups = Craft::$app->getCategories()->getAllGroups();
+        if ($groups) {
+
+            $return[] = ['optgroup' => Craft::t('app', 'Category Groups')];
+
+            /** @var CategoryGroup $group */
+            foreach ($groups as $group) {
+
+                $id = 'categoryGroup:'.$group->id;
+
+                $return[$id] = [
+                    'label' => $group->name,
+                    'value' => $id,
+                ];
+            }
+
+        }
+
+        return $return;
     }
 
     /**

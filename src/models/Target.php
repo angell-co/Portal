@@ -15,6 +15,7 @@ use angellco\portal\records\Target as TargetRecord;
 
 use Craft;
 use craft\base\Model;
+use craft\helpers\ArrayHelper;
 use craft\validators\UniqueValidator;
 
 /**
@@ -47,9 +48,14 @@ class Target extends Model
     public $context;
 
     /**
-     * @var
+     * @var array|null Site Settings
      */
     private $_siteSettings;
+
+    /**
+     * @var array|null Context Options
+     */
+    private $_contextOptions;
 
 
     // Public Methods
@@ -125,4 +131,25 @@ class Target extends Model
             $settings->setTarget($this);
         }
     }
+
+    /**
+     *
+     *
+     * @return string|bool
+     */
+    public function getContextName()
+    {
+
+        if (!$this->_contextOptions) {
+            $this->_contextOptions = Portal::$plugin->targets->getContextOptions();
+        }
+
+        if (isset($this->_contextOptions[$this->context])) {
+            return $this->_contextOptions[$this->context]['label'];
+        }
+
+        return false;
+
+    }
+
 }

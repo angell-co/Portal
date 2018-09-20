@@ -1,3 +1,4 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
 {% extends "_layouts/cp" %}
 
 {% set fullPageForm = true %}
@@ -23,18 +24,16 @@
         required: true,
     }) }}
 
-    {# CONTEXT #}
-
-    {#{{ forms.textField({#}
-        {#label: "Handle"|t('app'),#}
-        {#instructions: "How you’ll refer to this category group in the templates."|t('app'),#}
-        {#id: 'handle',#}
-        {#class: 'code',#}
-        {#name: 'handle',#}
-        {#value: categoryGroup.handle,#}
-        {#errors: categoryGroup.getErrors('handle'),#}
-        {#required: true#}
-    {#}) }}#}
+    {{ forms.selectField({
+        label: "Context"|t('portal'),
+        instructions: "Where this target can be used in the CP."|t('portal'),
+        id: 'context',
+        name: 'context',
+        options: contextOptions,
+        value: target.context,
+        errors: target.getErrors('context'),
+        required: true,
+    }) }}
 
     <hr>
 
