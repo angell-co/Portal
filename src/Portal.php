@@ -13,6 +13,7 @@ namespace angellco\portal;
 use angellco\portal\assetbundles\livepreview\LivePreviewAsset;
 use angellco\portal\services\PortalService as PortalServiceService;
 use angellco\portal\services\Targets as TargetsService;
+use angellco\portal\models\Settings;
 
 use Craft;
 use craft\base\Plugin;
@@ -41,6 +42,7 @@ use yii\base\Event;
  * @since     0.1.0
  *
  * @property  TargetsService $targets
+ * @method    Settings getSettings()
  */
 class Portal extends Plugin
 {
@@ -205,10 +207,12 @@ class Portal extends Plugin
                     throw new NotFoundHttpException('Invalid site handle: ' . $siteHandle);
                 }
 
+                // Make the settings the JS needs
                 $settings = [
                     'siteId' => $site->id,
                     'context' => $context,
-                    'targets' => $this->targets->getAllTargetsForLivePreview()
+                    'targets' => $this->targets->getAllTargetsForLivePreview(),
+                    'showBreakpoints' => $this->getSettings()->showLivePreviewBreakpoints
                 ];
 
                 // Register the AssetBundle
@@ -256,6 +260,17 @@ class Portal extends Plugin
                 $event->output = Craft::$app->view->renderPageTemplate($newTemplate, $event->variables);
             }
         }
+    }
+
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
+    protected function createSettingsModel()
+    {
+        return new Settings();
     }
 
 }

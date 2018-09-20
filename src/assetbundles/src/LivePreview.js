@@ -50,6 +50,12 @@ Portal.LivePreview = Garnish.Base.extend(
         Cookies.remove('portal_template');
 
 
+        // Before we go any futher check we actually have something to do
+        if (!this.settings.showBreakpoints && this.targetOptions.length === 0) {
+            return;
+        }
+
+
         // Bind to the live preview events
         Garnish.on(Craft.LivePreview, 'enter', $.proxy(function(ev)
         {
@@ -65,17 +71,22 @@ Portal.LivePreview = Garnish.Base.extend(
 
     onEnter: function(ev)
     {
-        this.addListener(Craft.livePreview.$editor, 'resize', 'toggleToolbar');
-        this.toggleToolbar();
+        if (this.settings.showBreakpoints) {
+            this.addListener(Craft.livePreview.$editor, 'resize', 'toggleToolbar');
+        }
+        this.attachToolbar();
     },
 
     onExit: function(ev)
     {
-        this.removeListener(Craft.livePreview.$editor, 'resize');
+        if (this.settings.showBreakpoints) {
+            this.removeListener(Craft.livePreview.$editor, 'resize');
+        }
     },
 
     toggleToolbar: function()
     {
+
         if (Craft.livePreview.$iframeContainer.outerWidth() > 1024) {
 
             this.attachToolbar();
@@ -96,27 +107,32 @@ Portal.LivePreview = Garnish.Base.extend(
 
             this.$toolbar = $('<header class="header" />');
 
+
             // Breakpoints
-            var $breakpointButtons = $('<div class="btngroup" />').appendTo(this.$toolbar);
-            $('<div class="portal-lp-btn portal-lp-btn--desktop" data-width="" data-height="" data-breakpoint="desktop" title="'+Craft.t('portal', 'Desktop')+'" />').appendTo($breakpointButtons);
-            $('<div class="portal-lp-btn portal-lp-btn--tablet" data-width="768" data-height="1006" data-breakpoint="tablet" title="'+Craft.t('portal', 'Tablet')+'" />').appendTo($breakpointButtons);
-            $('<div class="portal-lp-btn portal-lp-btn--mobile" data-width="375" data-height="653" data-breakpoint="mobile" title="'+Craft.t('portal', 'Mobile')+'" />').appendTo($breakpointButtons);
+            if (this.settings.showBreakpoints) {
+
+                // Breakpoint buttons
+                var $breakpointButtons = $('<div class="btngroup" />').appendTo(this.$toolbar);
+                $('<div class="portal-lp-btn portal-lp-btn--desktop" data-width="" data-height="" data-breakpoint="desktop" title="' + Craft.t('portal', 'Desktop') + '" />').appendTo($breakpointButtons);
+                $('<div class="portal-lp-btn portal-lp-btn--tablet" data-width="768" data-height="1006" data-breakpoint="tablet" title="' + Craft.t('portal', 'Tablet') + '" />').appendTo($breakpointButtons);
+                $('<div class="portal-lp-btn portal-lp-btn--mobile" data-width="375" data-height="653" data-breakpoint="mobile" title="' + Craft.t('portal', 'Mobile') + '" />').appendTo($breakpointButtons);
+
+                // Orientation toggle
+                var $orientationToggle = $('<div class="btn portal-lp-orientation-btn" data-icon="refresh"></div>').appendTo(this.$toolbar);
+                this.addListener($orientationToggle, 'activate', 'toggleOrientation');
+            }
 
 
-            // Orientation toggle
-            var $orientationToggle = $('<div class="btn portal-lp-orientation-btn" data-icon="refresh"></div>').appendTo(this.$toolbar);
-            this.addListener($orientationToggle, 'activate', 'toggleOrientation');
-
-
-            // Target selector
+            // Targets
             if (this.targetOptions.length > 0) {
+
+                // Target select menu
                 var $targetMenuBtn = $('<div class="btn menubtn right no-outline">' + Craft.t('portal', 'Choose Target') + '</div>').appendTo(this.$toolbar),
                     $targetMenu = $('<div class="menu" />').appendTo(this.$toolbar),
                     $targetMenuUl = $('<ul />').appendTo($targetMenu);
 
-
+                // TODO translate
                 $('<li><a data-template="">Primary Page</a></li>').appendTo($targetMenuUl);
-
 
                 $.each(this.targetOptions, $.proxy(function(key, target) {
 
@@ -146,39 +162,44 @@ Portal.LivePreview = Garnish.Base.extend(
                 });
             }
 
+            if (this.settings.showBreakpoints) {
+                // Breakpoint button click handlers
+                this.addListener($('.portal-lp-btn', $breakpointButtons), 'activate', 'changeBreakpoint');
 
-            // Breakpoint button click handlers
-            this.addListener($('.portal-lp-btn', $breakpointButtons), 'activate', 'changeBreakpoint');
 
-
-            // Set the window to the last breakpoint we have in the cookie
-            var currentBreakpoint = Cookies.get('portal_breakpoint');
-            if (currentBreakpoint) {
-                $breakpointButtons.find('.portal-lp-btn[data-breakpoint="'+currentBreakpoint+'"]').click();
+                // Set the window to the last breakpoint we have in the cookie
+                var currentBreakpoint = Cookies.get('portal_breakpoint');
+                if (currentBreakpoint) {
+                    $breakpointButtons.find('.portal-lp-btn[data-breakpoint="' + currentBreakpoint + '"]').click();
+                }
             }
 
         }
 
 
         // Device mask
-        if (!this.$deviceMask) {
+        if (this.settings.showBreakpoints && !this.$deviceMask) {
             this.$deviceMask = $('<div class="portal-device-mask" />');
         }
 
 
         // Add to DOM
         this.$toolbar.prependTo(Craft.livePreview.$iframeContainer);
-        this.$deviceMask.appendTo(Craft.livePreview.$iframeContainer);
-
-
-        // Set current state
-        if (currentBreakpoint && currentBreakpoint === 'tablet') {
-            Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--tablet');
+        if (this.$deviceMask) {
+            this.$deviceMask.appendTo(Craft.livePreview.$iframeContainer);
         }
 
-        var currentOrientation = Cookies.get('portal_orientation');
-        if ((currentBreakpoint && currentBreakpoint !== 'desktop') && (currentOrientation && currentOrientation === 'landscape')) {
-            Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--landscape');
+
+        // Set current breakpoint / orientation state
+        if (this.settings.showBreakpoints) {
+            if (currentBreakpoint && currentBreakpoint === 'tablet') {
+                Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--tablet');
+            }
+
+            var currentOrientation = Cookies.get('portal_orientation');
+            if ((currentBreakpoint && currentBreakpoint !== 'desktop') && (currentOrientation && currentOrientation === 'landscape')) {
+                Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--landscape');
+            }
         }
 
     },
@@ -342,5 +363,6 @@ Portal.LivePreview = Garnish.Base.extend(
         siteId: null,
         targets: null,
         context: null,
+        showBreakpoints: true
     }
 });
