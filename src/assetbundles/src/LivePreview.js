@@ -109,44 +109,47 @@ Portal.LivePreview = Garnish.Base.extend(
 
 
             // Target selector
-            var $targetMenuBtn = $('<div class="btn menubtn right no-outline">'+Craft.t('portal', 'Choose Target')+'</div>').appendTo(this.$toolbar),
-                $targetMenu = $('<div class="menu" />').appendTo(this.$toolbar),
-                $targetMenuUl = $('<ul />').appendTo($targetMenu);
+            if (this.targetOptions.length > 0) {
+                var $targetMenuBtn = $('<div class="btn menubtn right no-outline">' + Craft.t('portal', 'Choose Target') + '</div>').appendTo(this.$toolbar),
+                    $targetMenu = $('<div class="menu" />').appendTo(this.$toolbar),
+                    $targetMenuUl = $('<ul />').appendTo($targetMenu);
 
 
-            $('<li><a data-template="">Primary Page</a></li>').appendTo($targetMenuUl);
+                $('<li><a data-template="">Primary Page</a></li>').appendTo($targetMenuUl);
 
-            $.each(this.targetOptions, $.proxy(function(key, target) {
 
-                var targetSite = null;
+                $.each(this.targetOptions, $.proxy(function(key, target) {
 
-                $.each(target.siteSettings, $.proxy(function(key, siteSetting) {
+                    var targetSite = null;
 
-                    if (siteSetting.siteId == this.settings.siteId) {
-                        targetSite = siteSetting;
+                    $.each(target.siteSettings, $.proxy(function(key, siteSetting) {
+
+                        if (siteSetting.siteId == this.settings.siteId) {
+                            targetSite = siteSetting;
+                        }
+
+                    }, this));
+
+                    if (targetSite !== null) {
+                        $('<li><a data-template="' + targetSite.template + '">' + target.name + '</a></li>').appendTo($targetMenuUl);
                     }
 
                 }, this));
 
-                if (targetSite !== null) {
-                    $('<li><a data-template="' + targetSite.template + '">' + target.name + '</a></li>').appendTo($targetMenuUl);
-                }
-
-            }, this));
-
-            this.targetMenuBtn = new Garnish.MenuBtn($targetMenuBtn,
-            {
-                onOptionSelect: function(option)
+                this.targetMenuBtn = new Garnish.MenuBtn($targetMenuBtn,
                 {
-                    var template = $(option).data('template');
-                    Cookies.set('portal_template', template);
-                    Craft.livePreview.forceUpdateIframe();
-                }
-            });
+                    onOptionSelect: function(option) {
+                        var template = $(option).data('template');
+                        Cookies.set('portal_template', template);
+                        Craft.livePreview.forceUpdateIframe();
+                    }
+                });
+            }
 
 
             // Breakpoint button click handlers
             this.addListener($('.portal-lp-btn', $breakpointButtons), 'activate', 'changeBreakpoint');
+
 
             // Set the window to the last breakpoint we have in the cookie
             var currentBreakpoint = Cookies.get('portal_breakpoint');
@@ -225,7 +228,9 @@ Portal.LivePreview = Garnish.Base.extend(
         if (w !== '' && h !== '') {
 
             // Toggle classes
-            this.targetMenuBtn.menu.$container.addClass('dark');
+            if (this.targetMenuBtn) {
+                this.targetMenuBtn.menu.$container.addClass('dark');
+            }
             Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--resized');
 
             if (bp === 'tablet') {
@@ -317,7 +322,9 @@ Portal.LivePreview = Garnish.Base.extend(
 
     resetIframe: function()
     {
-        this.targetMenuBtn.menu.$container.removeClass('dark');
+        if (this.targetMenuBtn) {
+            this.targetMenuBtn.menu.$container.removeClass('dark');
+        }
         Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--resized');
         Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--tablet');
         Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--landscape');
