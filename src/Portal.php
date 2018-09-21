@@ -197,15 +197,19 @@ class Portal extends Plugin
             if ($context) {
 
                 // Work out the Site
-                $siteHandle = 'default';
+                $siteHandle = null;
                 if (count($segments) === 4) {
                     $siteHandle = $segments[3];
                 }
 
-                $site = Craft::$app->getSites()->getSiteByHandle($siteHandle);
+                if ($siteHandle) {
+                    $site = Craft::$app->getSites()->getSiteByHandle($siteHandle);
 
-                if (!$site) {
-                    throw new NotFoundHttpException('Invalid site handle: ' . $siteHandle);
+                    if (!$site) {
+                        throw new NotFoundHttpException('Invalid site handle: '.$siteHandle);
+                    }
+                } else {
+                    $site = Craft::$app->getSites()->getPrimarySite();
                 }
 
                 // Make the settings the JS needs
