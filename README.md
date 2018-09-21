@@ -1,8 +1,13 @@
-# Portal plugin for Craft CMS 3.x
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/angell-co/Portal/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/angell-co/Portal/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/angell-co/Portal/badges/build.png?b=master)](https://scrutinizer-ci.com/g/angell-co/Portal/build-status/master) [![Code Intelligence Status](https://scrutinizer-ci.com/g/angell-co/Portal/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
 
-Brings enhanced Live Preview capabilities to Craft, including a device toggle and additional targets in the main Live Preview tool.
+# Portal
+
+Portal brings advanced Live Preview capabilities to Craft CMS.
 
 ![Banner](resources/img/banner.png)
+
+Preview your content on tablet & mobile and add additional target templates for users to switch to, all within the primary Live Preview window.
+
 
 ## Requirements
 
@@ -18,7 +23,7 @@ To install the plugin, follow these instructions.
 
 2. Then tell Composer to load the plugin:
 
-        composer require angell-co/portal
+        composer require angellco/portal
 
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Portal.
 
