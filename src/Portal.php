@@ -25,6 +25,7 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\web\View;
 
 use yii\base\Event;
+use yii\web\NotFoundHttpException;
 
 /**
  * Craft plugins are very much like little applications in and of themselves. We’ve made
@@ -141,6 +142,7 @@ class Portal extends Plugin
     /**
      * Loads up the CP resources we need for Live Preview.
      *
+     * @throws NotFoundHttpException
      * @throws \yii\base\InvalidConfigException
      */
     private function _loadLivePreviewCpResources()
@@ -164,7 +166,7 @@ class Portal extends Plugin
                 }
                 else
                 {
-                    $entryId = explode('-',$segments[2])[0];
+                    $entryId = (integer) explode('-',$segments[2])[0];
                     $entry = Craft::$app->entries->getEntryById($entryId);
 
                     if ($entry)
