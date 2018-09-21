@@ -23,6 +23,7 @@ Portal.LivePreview = Garnish.Base.extend(
     $toolbar: null,
     $deviceMask: null,
 
+    zoomMenuBtn: null,
     targetMenuBtn: null,
     targetOptions: [],
     rotatingTimeout: null,
@@ -107,18 +108,38 @@ Portal.LivePreview = Garnish.Base.extend(
 
             this.$toolbar = $('<header class="header" />');
 
+            var $btnGroup = $('<div class="btngroup portal-lp-btngroup no-outline" />').appendTo(this.$toolbar);
 
             // Breakpoints
             if (this.settings.showBreakpoints) {
 
                 // Breakpoint buttons
-                var $breakpointButtons = $('<div class="btngroup" />').appendTo(this.$toolbar);
+                var $breakpointButtons = $('<div class="btngroup portal-lp-breakpoints" />').appendTo(this.$toolbar);
                 $('<div class="portal-lp-btn portal-lp-btn--desktop" data-width="" data-height="" data-breakpoint="desktop" title="' + Craft.t('portal', 'Desktop') + '" />').appendTo($breakpointButtons);
                 $('<div class="portal-lp-btn portal-lp-btn--tablet" data-width="768" data-height="1006" data-breakpoint="tablet" title="' + Craft.t('portal', 'Tablet') + '" />').appendTo($breakpointButtons);
                 $('<div class="portal-lp-btn portal-lp-btn--mobile" data-width="375" data-height="653" data-breakpoint="mobile" title="' + Craft.t('portal', 'Mobile') + '" />').appendTo($breakpointButtons);
 
+
+                // Zoom
+                var $zoomMenuBtn = $('<div class="btn portal-lp-zoom-btn menubtn no-outline">' + Craft.t('portal', 'Zoom') + '</div>').appendTo($btnGroup),
+                    $zoomMenu = $('<div class="menu portal-lp-menu" />').appendTo($btnGroup),
+                    $zoomMenuUl = $('<ul />').appendTo($zoomMenu);
+
+                $('<li><a data-zoom="1">100%</a></li>').appendTo($zoomMenuUl);
+                $('<li><a data-zoom="0.75" class="sel">75%</a></li>').appendTo($zoomMenuUl);
+                $('<li><a data-zoom="0.5">50%</a></li>').appendTo($zoomMenuUl);
+
+                this.zoomMenuBtn = new Garnish.MenuBtn($zoomMenuBtn,
+                {
+                    onOptionSelect: function(option) {
+                        var zoom = $(option).data('zoom');
+                        Cookies.set('portal_zoom', zoom);
+                    }
+                });
+
+
                 // Orientation toggle
-                var $orientationToggle = $('<div class="btn portal-lp-orientation-btn" data-icon="refresh"></div>').appendTo(this.$toolbar);
+                var $orientationToggle = $('<div class="btn portal-lp-orientation-btn" data-icon="refresh"></div>').appendTo($btnGroup);
                 this.addListener($orientationToggle, 'activate', 'toggleOrientation');
             }
 
@@ -127,12 +148,12 @@ Portal.LivePreview = Garnish.Base.extend(
             if (this.targetOptions.length > 0) {
 
                 // Target select menu
-                var $targetMenuBtn = $('<div class="btn menubtn right no-outline">' + Craft.t('portal', 'Choose Target') + '</div>').appendTo(this.$toolbar),
-                    $targetMenu = $('<div class="menu" />').appendTo(this.$toolbar),
+                var $targetMenu = $('<div class="menu portal-lp-menu" />').prependTo($btnGroup),
+                    $targetMenuBtn = $('<div class="btn menubtn no-outline">' + Craft.t('portal', 'Choose Target') + '</div>').prependTo($btnGroup),
                     $targetMenuUl = $('<ul />').appendTo($targetMenu);
 
                 // TODO translate
-                $('<li><a data-template="">Primary Page</a></li>').appendTo($targetMenuUl);
+                $('<li><a data-template="" class="sel">Primary Page</a></li>').appendTo($targetMenuUl);
 
                 $.each(this.targetOptions, $.proxy(function(key, target) {
 
@@ -249,9 +270,9 @@ Portal.LivePreview = Garnish.Base.extend(
         if (w !== '' && h !== '') {
 
             // Toggle classes
-            if (this.targetMenuBtn) {
-                this.targetMenuBtn.menu.$container.addClass('dark');
-            }
+            if (this.targetMenuBtn) this.targetMenuBtn.menu.$container.addClass('dark');
+            if (this.zoomMenuBtn) this.zoomMenuBtn.menu.$container.addClass('dark');
+
             Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--resized');
 
             if (bp === 'tablet') {
@@ -343,9 +364,9 @@ Portal.LivePreview = Garnish.Base.extend(
 
     resetIframe: function()
     {
-        if (this.targetMenuBtn) {
-            this.targetMenuBtn.menu.$container.removeClass('dark');
-        }
+        if (this.targetMenuBtn) this.targetMenuBtn.menu.$container.removeClass('dark');
+        if (this.zoomMenuBtn) this.zoomMenuBtn.menu.$container.removeClass('dark');
+
         Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--resized');
         Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--tablet');
         Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--landscape');

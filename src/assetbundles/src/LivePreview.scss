@@ -12,13 +12,24 @@
     height: 59px;
 
     // Only show this when resized (non-desktop breakpoints)
-    .portal-lp-orientation-btn {
+    .portal-lp-orientation-btn,
+    .portal-lp-zoom-btn {
       display: none;
     }
 
-    .btngroup {
-      margin: -4px auto -41px auto;
-      width: 192px;
+    .no-outline:focus {
+      outline: none;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+    }
+
+    .portal-lp-breakpoints {
+      margin: -36px auto 0 auto;
+      width: 209px;
+    }
+
+    .portal-lp-btngroup {
+      display: inline-block;
     }
 
     .portal-lp-btn {
@@ -75,7 +86,7 @@
     .header {
       background: #2F2F2F;
 
-      > .btn {
+      .portal-lp-btngroup .btn {
         background: #444;
         color: #fff;
 
@@ -84,7 +95,8 @@
         }
       }
 
-      .portal-lp-orientation-btn {
+      .portal-lp-orientation-btn,
+      .portal-lp-zoom-btn {
         display: inline-block;
       }
 
@@ -238,6 +250,14 @@
       }
     }
 
+  }
+
+}
+
+.portal-lp-menu.dark {
+
+  .sel {
+    background: #656565;
   }
 
 }
