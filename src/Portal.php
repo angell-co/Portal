@@ -11,7 +11,6 @@
 namespace angellco\portal;
 
 use angellco\portal\assetbundles\livepreview\LivePreviewAsset;
-use angellco\portal\services\PortalService as PortalServiceService;
 use angellco\portal\services\Targets as TargetsService;
 use angellco\portal\models\Settings;
 
