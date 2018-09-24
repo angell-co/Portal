@@ -1,4 +1,4 @@
-.portal-lp-iframe-container {
+.portal-lp {
 
   // Toolbar
   .header {
@@ -47,23 +47,16 @@
         transition-duration: .3s;
       }
 
-      &:active::before {
-        background-size: 38px 38px;
-      }
+      // Hover state
+      &:active::before { background-size: 38px 38px; }
 
-      &--active:active::before {
-        background-size: 40px 40px;
-      }
+      // Not for currently active btn
+      &--active:active::before { background-size: 40px 40px; }
 
-      &--desktop::before {
-        background-image: url(../svg/iMac.svg);
-      }
-      &--tablet::before {
-        background-image: url(../svg/iPad.svg);
-      }
-      &--mobile::before {
-        background-image: url(../svg/iPhone.svg);
-      }
+      // SVGs
+      &--desktop::before { background-image: url(../svg/iMac.svg);   }
+      &--tablet::before  { background-image: url(../svg/iPad.svg);   }
+      &--mobile::before  { background-image: url(../svg/iPhone.svg); }
     }
   }
 
@@ -73,7 +66,7 @@
   }
 
   // Hide device mask for desktop
-  .portal-device-mask {
+  .portal-lp-device-mask {
     display: none;
   }
 
@@ -110,22 +103,16 @@
         }
       }
 
-      .portal-lp-btn--desktop::before {
-        background-image: url(../svg/iMac-white.svg);
-      }
-      .portal-lp-btn--tablet::before {
-        background-image: url(../svg/iPad-white.svg);
-      }
-      .portal-lp-btn--mobile::before {
-        background-image: url(../svg/iPhone-white.svg);
-      }
+      .portal-lp-btn--desktop::before { background-image: url(../svg/iMac-white.svg);   }
+      .portal-lp-btn--tablet::before  { background-image: url(../svg/iPad-white.svg);   }
+      .portal-lp-btn--mobile::before  { background-image: url(../svg/iPhone-white.svg); }
 
     }
 
     // The iframe
     .lp-iframe {
       z-index: 2;
-      top: 181px;
+      top: 74px;
       margin-bottom: 24px;
 
       background: #fff !important;
@@ -135,16 +122,21 @@
       box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.2);
 
       opacity: 1;
-      transition: opacity .3s;
+      transform: scale(0.75) rotate(0deg);
+      transition: opacity .3s, transform .3s, top .3s;
+      // TODO
+      // GAH, need the transform transition here otherwise scale doesn’t
+      // animate, but then when the rotating class is taken _off_ we get
+      // it animating back around when we want that to be 0s.
     }
 
     // Device mask - mobile
-    .portal-device-mask {
+    .portal-lp-device-mask {
       display: block;
       position: absolute;
       z-index: 1;
 
-      top: 83px;
+      top: -24px;
       left: 50%;
       margin-left: -(426px/2);
       margin-bottom: 24px;
@@ -155,26 +147,67 @@
       background-image: url(../svg/iPhone.svg);
       background-repeat: no-repeat;
 
-      transition: transform .3s;
+      transform: scale(0.75) rotate(0deg);
+      transition: transform .3s, top .3s;
+    }
 
+    // Zoomed portrait - mobile
+    &.portal-lp--zoom-full {
+      .lp-iframe {
+        top: 181px;
+        transform: scale(1) rotate(0deg);
+      }
+      .portal-lp-device-mask {
+        top: 83px;
+        transform: scale(1) rotate(0deg);
+      }
+    }
+    &.portal-lp--zoom-half {
+      .lp-iframe {
+        top: -33px;
+        transform: scale(0.5) rotate(0deg);
+      }
+      .portal-lp-device-mask {
+        top: -131px;
+        transform: scale(0.5) rotate(0deg);
+      }
     }
 
     // Tablet mode
-    &.portal-lp-iframe-container--tablet {
+    &.portal-lp--tablet {
 
       // The iframe
       .lp-iframe {
-        top: 184px;
+        top: 51px;
       }
 
       // Device mask - tablet
-      .portal-device-mask {
+      .portal-lp-device-mask {
+        top: -74px;
         background-image: url(../svg/iPad.svg);
 
         margin-left: -(841px / 2);
 
         width: 841px;
         height: 1252px;
+      }
+
+      // Zoomed portrait - tablet
+      &.portal-lp--zoom-full {
+        .lp-iframe {
+          top: 208px;
+        }
+        .portal-lp-device-mask {
+          top: 83px;
+        }
+      }
+      &.portal-lp--zoom-half {
+        .lp-iframe {
+          top: -105px;
+        }
+        .portal-lp-device-mask {
+          top: -230px;
+        }
       }
     }
 
@@ -189,67 +222,169 @@
 
       .portal-lp-btn--tablet::before,
       .portal-lp-btn--mobile::before {
-        -webkit-transform: rotate(-90deg);
-        transform: rotate(-90deg);
+        transform: scale(0.75) rotate(-90deg);
         transition-duration: .3s;
       }
 
     }
 
+    // Iframe - mobile
+    .lp-iframe {
+      top: 55px;
+    }
 
     // Device mask - mobile
-    .portal-device-mask {
-      top: -57px;
-      -webkit-transform: rotate(-90deg);
-      transform: rotate(-90deg);
+    .portal-lp-device-mask {
+      top: -184px;
+      transform: scale(0.75) rotate(-90deg);
       margin-left: -((426px/2)-2); // no idea why this is happening
     }
 
 
-    // Tablet mode
-    &.portal-lp-iframe-container--tablet {
+    // Zoomed landscape - mobile
+    &.portal-lp--zoom-full {
+      .lp-iframe {
+        top: 107px;
+      }
+      .portal-lp-device-mask {
+        top: -131px;
+        transform: scale(1) rotate(-90deg);
+      }
+    }
+    &.portal-lp--zoom-half {
+      .lp-iframe {
+        top: 2px;
+      }
+      .portal-lp-device-mask {
+        top: -237px;
+        transform: scale(0.5) rotate(-90deg);
+      }
+    }
 
-      // Device mask - tablet
-      .portal-device-mask {
+
+    // Tablet mode
+    &.portal-lp--tablet {
+
+      .lp-iframe {
+        top: 14px;
+      }
+
+      .portal-lp-device-mask {
+        top: -228px;
         margin-left: -((841px/2)+2);
+      }
+
+      &.portal-lp--zoom-full {
+        .lp-iframe {
+          top: 118px;
+        }
+        .portal-lp-device-mask {
+          top: -123px;
+        }
+      }
+      &.portal-lp--zoom-half {
+        .lp-iframe {
+          top: -91px;
+        }
+        .portal-lp-device-mask {
+          top: -333px;
+        }
+      }
+
+    }
+
+  }
+
+
+  // TODO finish off vvvv
+
+  // Whilst rotating the iframe mid animation
+  &--rotating {
+
+    .lp-iframe {
+      opacity: 0.3;
+      top: 320px;
+      transform: scale(0.75) rotate(90deg);
+      transition: transform .3s, opacity .3s, top .3s;
+    }
+
+    &.portal-lp--zoom-full .lp-iframe {
+      top: 320px;
+      transform: scale(1) rotate(90deg);
+    }
+    &.portal-lp--zoom-half .lp-iframe {
+      top: 320px;
+      transform: scale(0.5) rotate(90deg);
+    }
+
+    &.portal-lp--landscape {
+      .lp-iframe {
+        top: 42px;
+        transform: scale(0.75) rotate(-90deg);
+      }
+      &.portal-lp--zoom-full .lp-iframe {
+        top: 42px;
+        transform: scale(1) rotate(-90deg);
+      }
+      &.portal-lp--zoom-half .lp-iframe {
+        top: 42px;
+        transform: scale(0.5) rotate(-90deg);
+      }
+    }
+
+    &.portal-lp--tablet {
+      .lp-iframe {
+        top: 327px;
+      }
+
+      &.portal-lp--zoom-full .lp-iframe {
+        top: 327px;
+      }
+      &.portal-lp--zoom-half .lp-iframe {
+        top: 327px;
+      }
+
+      &.portal-lp--landscape {
+        .lp-iframe {
+          top: 65px;
+        }
+        &.portal-lp--zoom-full .lp-iframe {
+          top: 65px;
+        }
+        &.portal-lp--zoom-half .lp-iframe {
+          top: 65px;
+        }
       }
     }
 
   }
 
 
-  // Whilst rotating the iframe mid animation
-  &--rotating {
-
+  // TODO finish off
+  &--rotating-done {
     .lp-iframe {
-      -webkit-transform: rotate(90deg);
-      transform: rotate(90deg);
-      opacity: 0.3;
-      top: 320px;
-
-      transition: transform .3s, opacity .3s;
+      transform: scale(0.75) rotate(0deg);
+      transition: opacity .3s, transform 0s, top .3s;
+    }
+    &.portal-lp--zoom-full .lp-iframe {
+      transform: scale(1) rotate(0deg);
+    }
+    &.portal-lp--zoom-half .lp-iframe {
+      transform: scale(0.5) rotate(0deg);
     }
 
-    &.portal-lp-iframe-container--landscape {
+    &.portal-lp--landscape {
       .lp-iframe {
-        -webkit-transform: rotate(-90deg);
-        transform: rotate(-90deg);
-        top: 42px;
+        transform: scale(0.75) rotate(-90deg);
+        transition: opacity .3s, transform 0s, top .3s;
+      }
+      &.portal-lp--zoom-full .lp-iframe {
+        transform: scale(1) rotate(-90deg);
+      }
+      &.portal-lp--zoom-half .lp-iframe {
+        transform: scale(0.5) rotate(-90deg);
       }
     }
-
-    &.portal-lp-iframe-container--tablet {
-      .lp-iframe {
-        top: 327px;
-      }
-
-      &.portal-lp-iframe-container--landscape {
-        .lp-iframe {
-          top: 65px;
-        }
-      }
-    }
-
   }
 
 }

@@ -102,7 +102,7 @@ Portal.LivePreview = Garnish.Base.extend(
     attachToolbar: function()
     {
 
-        Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container');
+        Craft.livePreview.$iframeContainer.addClass('portal-lp');
 
         if (!this.$toolbar) {
 
@@ -125,16 +125,13 @@ Portal.LivePreview = Garnish.Base.extend(
                     $zoomMenu = $('<div class="menu portal-lp-menu" />').appendTo($btnGroup),
                     $zoomMenuUl = $('<ul />').appendTo($zoomMenu);
 
-                $('<li><a data-zoom="1">100%</a></li>').appendTo($zoomMenuUl);
-                $('<li><a data-zoom="0.75" class="sel">75%</a></li>').appendTo($zoomMenuUl);
-                $('<li><a data-zoom="0.5">50%</a></li>').appendTo($zoomMenuUl);
+                $('<li><a data-zoom="full">100%</a></li>').appendTo($zoomMenuUl);
+                $('<li><a data-zoom="threequarters" class="sel">75%</a></li>').appendTo($zoomMenuUl);
+                $('<li><a data-zoom="half">50%</a></li>').appendTo($zoomMenuUl);
 
                 this.zoomMenuBtn = new Garnish.MenuBtn($zoomMenuBtn,
                 {
-                    onOptionSelect: function(option) {
-                        var zoom = $(option).data('zoom');
-                        Cookies.set('portal_zoom', zoom);
-                    }
+                    onOptionSelect: $.proxy(this, 'onZoom')
                 });
 
 
@@ -175,11 +172,7 @@ Portal.LivePreview = Garnish.Base.extend(
 
                 this.targetMenuBtn = new Garnish.MenuBtn($targetMenuBtn,
                 {
-                    onOptionSelect: function(option) {
-                        var template = $(option).data('template');
-                        Cookies.set('portal_template', template);
-                        Craft.livePreview.forceUpdateIframe();
-                    }
+                    onOptionSelect: $.proxy(this, 'onChangeTarget')
                 });
             }
 
@@ -200,7 +193,7 @@ Portal.LivePreview = Garnish.Base.extend(
 
         // Device mask
         if (this.settings.showBreakpoints && !this.$deviceMask) {
-            this.$deviceMask = $('<div class="portal-device-mask" />');
+            this.$deviceMask = $('<div class="portal-lp-device-mask" />');
         }
 
 
@@ -214,12 +207,12 @@ Portal.LivePreview = Garnish.Base.extend(
         // Set current breakpoint / orientation state
         if (this.settings.showBreakpoints) {
             if (currentBreakpoint && currentBreakpoint === 'tablet') {
-                Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--tablet');
+                Craft.livePreview.$iframeContainer.addClass('portal-lp--tablet');
             }
 
             var currentOrientation = Cookies.get('portal_orientation');
             if ((currentBreakpoint && currentBreakpoint !== 'desktop') && (currentOrientation && currentOrientation === 'landscape')) {
-                Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--landscape');
+                Craft.livePreview.$iframeContainer.addClass('portal-lp--landscape');
             }
         }
 
@@ -227,8 +220,8 @@ Portal.LivePreview = Garnish.Base.extend(
 
     detachToolbar: function()
     {
-        Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container');
-        Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--landscape');
+        Craft.livePreview.$iframeContainer.removeClass('portal-lp');
+        Craft.livePreview.$iframeContainer.removeClass('portal-lp--landscape');
         this.resetIframe();
 
         if (this.$toolbar) {
@@ -262,7 +255,7 @@ Portal.LivePreview = Garnish.Base.extend(
         if (orientation && orientation === 'landscape') {
             w = $btn.data('height');
             h = $btn.data('width');
-            Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--landscape');
+            Craft.livePreview.$iframeContainer.addClass('portal-lp--landscape');
         }
 
 
@@ -273,12 +266,12 @@ Portal.LivePreview = Garnish.Base.extend(
             if (this.targetMenuBtn) this.targetMenuBtn.menu.$container.addClass('dark');
             if (this.zoomMenuBtn) this.zoomMenuBtn.menu.$container.addClass('dark');
 
-            Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--resized');
+            Craft.livePreview.$iframeContainer.addClass('portal-lp--resized');
 
             if (bp === 'tablet') {
-                Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--tablet');
+                Craft.livePreview.$iframeContainer.addClass('portal-lp--tablet');
             } else {
-                Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--tablet');
+                Craft.livePreview.$iframeContainer.removeClass('portal-lp--tablet');
             }
 
             // Make the size change
@@ -319,10 +312,10 @@ Portal.LivePreview = Garnish.Base.extend(
 
         if (!orientation || orientation === 'portrait') {
             orientation = 'landscape';
-            Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--landscape');
+            Craft.livePreview.$iframeContainer.addClass('portal-lp--landscape');
         } else {
             orientation = 'portrait';
-            Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--landscape');
+            Craft.livePreview.$iframeContainer.removeClass('portal-lp--landscape');
         }
 
         Cookies.set('portal_orientation', orientation);
@@ -334,7 +327,7 @@ Portal.LivePreview = Garnish.Base.extend(
         if (bp && bp !== 'desktop') {
 
             clearTimeout(this.rotatingTimeout);
-            Craft.livePreview.$iframeContainer.addClass('portal-lp-iframe-container--rotating');
+            Craft.livePreview.$iframeContainer.addClass('portal-lp--rotating');
 
             this.rotatingTimeout = setTimeout(function() {
 
@@ -350,9 +343,12 @@ Portal.LivePreview = Garnish.Base.extend(
                     });
                 }
 
-                Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--rotating');
-
-                $btn.data('portal-working', false);
+                Craft.livePreview.$iframeContainer.addClass('portal-lp--rotating-done');
+                Craft.livePreview.$iframeContainer.removeClass('portal-lp--rotating');
+                setTimeout(function() {
+                    Craft.livePreview.$iframeContainer.removeClass('portal-lp--rotating-done');
+                    $btn.data('portal-working', false);
+                });
 
             }, 350);
 
@@ -367,15 +363,60 @@ Portal.LivePreview = Garnish.Base.extend(
         if (this.targetMenuBtn) this.targetMenuBtn.menu.$container.removeClass('dark');
         if (this.zoomMenuBtn) this.zoomMenuBtn.menu.$container.removeClass('dark');
 
-        Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--resized');
-        Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--tablet');
-        Craft.livePreview.$iframeContainer.removeClass('portal-lp-iframe-container--landscape');
+        Craft.livePreview.$iframeContainer.removeClass('portal-lp--resized');
+        Craft.livePreview.$iframeContainer.removeClass('portal-lp--tablet');
+        Craft.livePreview.$iframeContainer.removeClass('portal-lp--landscape');
         Craft.livePreview.$iframe.css({
             width: '100%',
             height: '100%',
             left: 0,
             marginLeft: 0
         });
+    },
+
+    onChangeTarget: function(menuOption)
+    {
+        var $menuOption = $(menuOption),
+            template = $menuOption.data('template');
+
+        // Update menu sel class
+        $menuOption.parent().siblings().find('a.sel').removeClass('sel');
+        $menuOption.addClass('sel');
+
+        // Store the template in a cookie
+        Cookies.set('portal_template', template);
+
+        // Force the iframe to refresh
+        Craft.livePreview.forceUpdateIframe();
+    },
+
+    onZoom: function(menuOption)
+    {
+
+        var $menuOption = $(menuOption),
+            zoom = $menuOption.data('zoom');
+
+        // Update menu sel class
+        $menuOption.parent().siblings().find('a.sel').removeClass('sel');
+        $menuOption.addClass('sel');
+
+        // Store the zoom in a cookie
+        Cookies.set('portal_zoom', zoom);
+
+        // Toggle the container class
+        if (zoom === 'full') {
+            Craft.livePreview.$iframeContainer.removeClass('portal-lp--zoom-half');
+            Craft.livePreview.$iframeContainer.addClass('portal-lp--zoom-full');
+        }
+        if (zoom === 'threequarters') {
+            Craft.livePreview.$iframeContainer.removeClass('portal-lp--zoom-full');
+            Craft.livePreview.$iframeContainer.removeClass('portal-lp--zoom-half');
+        }
+        if (zoom === 'half') {
+            Craft.livePreview.$iframeContainer.removeClass('portal-lp--zoom-full');
+            Craft.livePreview.$iframeContainer.addClass('portal-lp--zoom-half');
+        }
+
     }
 
 },
