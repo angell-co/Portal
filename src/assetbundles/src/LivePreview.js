@@ -204,7 +204,7 @@ Portal.LivePreview = Garnish.Base.extend(
         }
 
 
-        // Set current breakpoint / orientation state
+        // Set current state
         if (this.settings.showBreakpoints) {
             if (currentBreakpoint && currentBreakpoint === 'tablet') {
                 Craft.livePreview.$iframeContainer.addClass('portal-lp--tablet');
@@ -213,6 +213,13 @@ Portal.LivePreview = Garnish.Base.extend(
             var currentOrientation = Cookies.get('portal_orientation');
             if ((currentBreakpoint && currentBreakpoint !== 'desktop') && (currentOrientation && currentOrientation === 'landscape')) {
                 Craft.livePreview.$iframeContainer.addClass('portal-lp--landscape');
+            }
+
+            var currentZoom = Cookies.get('portal_zoom');
+            if (currentZoom && currentZoom !== 'threequarters') {
+                Craft.livePreview.$iframeContainer.addClass('portal-lp--zoom-'+currentZoom);
+                $zoomMenu.find('a.sel').removeClass('sel');
+                $zoomMenu.find('a[data-zoom='+currentZoom+']').addClass('sel');
             }
         }
 
@@ -278,8 +285,7 @@ Portal.LivePreview = Garnish.Base.extend(
             Craft.livePreview.$iframe.css({
                 width: w + 'px',
                 height: h + 'px',
-                left: '50%',
-                marginLeft: '-' + (w / 2) + 'px'
+                marginLeft: '-'+(w/2)+'px'
             });
 
         } else {
@@ -339,7 +345,7 @@ Portal.LivePreview = Garnish.Base.extend(
                     Craft.livePreview.$iframe.css({
                         width: h + 'px',
                         height: w + 'px',
-                        marginLeft: '-' + (h / 2) + 'px'
+                        marginLeft: '-'+(h/2)+'px'
                     });
                 }
 
@@ -369,8 +375,7 @@ Portal.LivePreview = Garnish.Base.extend(
         Craft.livePreview.$iframe.css({
             width: '100%',
             height: '100%',
-            left: 0,
-            marginLeft: 0
+            marginLeft: '0'
         });
     },
 
