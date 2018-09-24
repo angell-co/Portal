@@ -348,7 +348,7 @@ Portal.LivePreview = Garnish.Base.extend(
                 setTimeout(function() {
                     Craft.livePreview.$iframeContainer.removeClass('portal-lp--rotating-done');
                     $btn.data('portal-working', false);
-                });
+                }, 50);
 
             }, 350);
 

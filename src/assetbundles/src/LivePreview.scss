@@ -124,10 +124,6 @@
       opacity: 1;
       transform: scale(0.75) rotate(0deg);
       transition: opacity .3s, transform .3s, top .3s;
-      // TODO
-      // GAH, need the transform transition here otherwise scale doesn’t
-      // animate, but then when the rotating class is taken _off_ we get
-      // it animating back around when we want that to be 0s.
     }
 
     // Device mask - mobile
@@ -295,15 +291,12 @@
 
   }
 
-
-  // TODO finish off vvvv
-
   // Whilst rotating the iframe mid animation
   &--rotating {
 
     .lp-iframe {
       opacity: 0.3;
-      top: 320px;
+      top: 214px;
       transform: scale(0.75) rotate(90deg);
       transition: transform .3s, opacity .3s, top .3s;
     }
@@ -313,58 +306,59 @@
       transform: scale(1) rotate(90deg);
     }
     &.portal-lp--zoom-half .lp-iframe {
-      top: 320px;
+      top: 107px;
       transform: scale(0.5) rotate(90deg);
     }
 
     &.portal-lp--landscape {
       .lp-iframe {
-        top: 42px;
+        top: -84px;
         transform: scale(0.75) rotate(-90deg);
       }
       &.portal-lp--zoom-full .lp-iframe {
-        top: 42px;
+        top: -31px;
         transform: scale(1) rotate(-90deg);
       }
       &.portal-lp--zoom-half .lp-iframe {
-        top: 42px;
+        top: -137px;
         transform: scale(0.5) rotate(-90deg);
       }
     }
 
     &.portal-lp--tablet {
       .lp-iframe {
-        top: 327px;
+        top: 170px;
       }
 
       &.portal-lp--zoom-full .lp-iframe {
         top: 327px;
       }
       &.portal-lp--zoom-half .lp-iframe {
-        top: 327px;
+        top: 13px;
       }
 
       &.portal-lp--landscape {
         .lp-iframe {
-          top: 65px;
+          top: -105px;
         }
         &.portal-lp--zoom-full .lp-iframe {
-          top: 65px;
+          top: 0;
         }
         &.portal-lp--zoom-half .lp-iframe {
-          top: 65px;
+          top: -210px;
         }
       }
     }
 
   }
 
-
-  // TODO finish off
+  // To fix the fact that we can’t animate only specific transforms
+  // we have another class that gets added and removed slightly after the main
+  // rotating one.
   &--rotating-done {
     .lp-iframe {
       transform: scale(0.75) rotate(0deg);
-      transition: opacity .3s, transform 0s, top .3s;
+      transition: opacity .3s, transform 0s, top 0s;
     }
     &.portal-lp--zoom-full .lp-iframe {
       transform: scale(1) rotate(0deg);
@@ -375,20 +369,21 @@
 
     &.portal-lp--landscape {
       .lp-iframe {
-        transform: scale(0.75) rotate(-90deg);
-        transition: opacity .3s, transform 0s, top .3s;
+        transform: scale(0.75) rotate(0deg);
+        transition: opacity .3s, transform 0s, top 0s;
       }
       &.portal-lp--zoom-full .lp-iframe {
-        transform: scale(1) rotate(-90deg);
+        transform: scale(1) rotate(0deg);
       }
       &.portal-lp--zoom-half .lp-iframe {
-        transform: scale(0.5) rotate(-90deg);
+        transform: scale(0.5) rotate(0deg);
       }
     }
   }
 
 }
 
+// Dark menus
 .portal-lp-menu.dark {
 
   .sel {
