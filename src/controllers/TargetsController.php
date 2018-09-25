@@ -144,8 +144,8 @@ class TargetsController extends Controller
 
         // Main group settings
         $target->id = $request->getBodyParam('targetId');
-        $target->name = $request->getBodyParam('name');
-        $target->context = $request->getBodyParam('context');
+        $target->name = (string)$request->getBodyParam('name');
+        $target->context = (string)$request->getBodyParam('context');
 
         // Site-specific settings
         $allSiteSettings = [];
