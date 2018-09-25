@@ -14,6 +14,8 @@ use Craft;
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
 
+use yii\web\View;
+
 /**
  * LivePreviewAsset AssetBundle
  *
