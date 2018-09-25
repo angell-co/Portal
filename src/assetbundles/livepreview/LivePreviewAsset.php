@@ -8,31 +8,20 @@
  * @copyright Copyright (c) 2018 Angell & Co
  */
 
-namespace angellco\portal\assetbundles\indexcpsection;
+namespace angellco\portal\assetbundles\livepreview;
 
 use Craft;
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
 
 /**
- * IndexCPSectionAsset AssetBundle
- *
- * AssetBundle represents a collection of asset files, such as CSS, JS, images.
- *
- * Each asset bundle has a unique name that globally identifies it among all asset bundles used in an application.
- * The name is the [fully qualified class name](http://php.net/manual/en/language.namespaces.rules.php)
- * of the class representing it.
- *
- * An asset bundle can depend on other asset bundles. When registering an asset bundle
- * with a view, all its dependent asset bundles will be automatically registered.
- *
- * http://www.yiiframework.com/doc-2.0/guide-structure-assets.html
+ * LivePreviewAsset AssetBundle
  *
  * @author    Angell & Co
  * @package   Portal
  * @since     0.1.0
  */
-class IndexCPSectionAsset extends AssetBundle
+class LivePreviewAsset extends AssetBundle
 {
     // Public Methods
     // =========================================================================
@@ -43,7 +32,7 @@ class IndexCPSectionAsset extends AssetBundle
     public function init()
     {
         // define the path that your publishable resources live
-        $this->sourcePath = "@angellco/portal/assetbundles/indexcpsection/dist";
+        $this->sourcePath = "@angellco/portal/assetbundles/livepreview/dist";
 
         // define the dependencies
         $this->depends = [
@@ -53,13 +42,31 @@ class IndexCPSectionAsset extends AssetBundle
         // define the relative path to CSS/JS files that should be registered with the page
         // when this asset bundle is registered
         $this->js = [
-            'js/Index.js',
+            'js/LivePreview.min.js',
         ];
-
         $this->css = [
-            'css/Index.css',
+            'css/LivePreview.min.css',
         ];
 
         parent::init();
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function registerAssetFiles($view)
+    {
+        parent::registerAssetFiles($view);
+
+        if ($view instanceof View) {
+            $view->registerTranslations('portal', [
+                'Desktop',
+                'Tablet',
+                'Mobile',
+                'Choose Target'
+            ]);
+        }
+
+    }
+
 }
