@@ -80,7 +80,7 @@ class Target_SiteSettings extends Model
         }
 
         if (($this->_target = Portal::$plugin->targets->getTargetById($this->targetId)) === null) {
-            throw new InvalidConfigException('Invalid target ID: ' . $this->targetId);
+            throw new InvalidConfigException('Invalid target ID: '.$this->targetId);
         }
 
         return $this->_target;
@@ -109,7 +109,7 @@ class Target_SiteSettings extends Model
         }
 
         if (($site = Craft::$app->getSites()->getSiteById($this->siteId)) === null) {
-            throw new InvalidConfigException('Invalid site ID: ' . $this->siteId);
+            throw new InvalidConfigException('Invalid site ID: '.$this->siteId);
         }
 
         return $site;
@@ -131,9 +131,9 @@ class Target_SiteSettings extends Model
     public function rules()
     {
         $rules = [
-            [['id', 'targetId', 'siteId'], 'number', 'integerOnly' => true],
-            [['siteId'], SiteIdValidator::class],
-            [['template'], 'string', 'max' => 500]
+            [ [ 'id', 'targetId', 'siteId' ], 'number', 'integerOnly' => true ],
+            [ [ 'siteId' ], SiteIdValidator::class ],
+            [ [ 'template' ], 'string', 'max' => 500 ]
         ];
 
         return $rules;

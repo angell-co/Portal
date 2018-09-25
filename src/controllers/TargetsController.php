@@ -76,11 +76,11 @@ class TargetsController extends Controller
     {
         $this->requireAdmin();
 
-        $variables = [];
+        $variables = [ ];
 
 
         // Breadcrumbs
-        $variables['crumbs'] = [
+        $variables[ 'crumbs' ] = [
             [
                 'label' => Craft::t('portal', 'Portal'),
                 'url' => UrlHelper::url('portal')
@@ -97,11 +97,11 @@ class TargetsController extends Controller
 
 
         // Context options
-        $variables['contextOptions'] = Portal::$plugin->targets->getContextOptions();
+        $variables[ 'contextOptions' ] = Portal::$plugin->targets->getContextOptions();
 
 
         // Set up the model
-        $variables['brandNewTarget'] = false;
+        $variables[ 'brandNewTarget' ] = false;
 
         if ($targetId !== null) {
             if ($target === null) {
@@ -112,18 +112,18 @@ class TargetsController extends Controller
                 }
             }
 
-            $variables['title'] = $target->name;
+            $variables[ 'title' ] = $target->name;
         } else {
             if ($target === null) {
                 $target = new Target();
-                $variables['brandNewTarget'] = true;
+                $variables[ 'brandNewTarget' ] = true;
             }
 
-            $variables['title'] = Craft::t('portal', 'Create a new target');
+            $variables[ 'title' ] = Craft::t('portal', 'Create a new target');
         }
 
-        $variables['targetId'] = $targetId;
-        $variables['target'] = $target;
+        $variables[ 'targetId' ] = $targetId;
+        $variables[ 'target' ] = $target;
 
         return $this->renderTemplate('portal/targets/_edit', $variables);
     }
@@ -148,16 +148,16 @@ class TargetsController extends Controller
         $target->context = $request->getBodyParam('context');
 
         // Site-specific settings
-        $allSiteSettings = [];
+        $allSiteSettings = [ ];
 
         foreach (Craft::$app->getSites()->getAllSites() as $site) {
-            $postedSettings = $request->getBodyParam('sites.' . $site->handle);
+            $postedSettings = $request->getBodyParam('sites.'.$site->handle);
 
             $siteSettings = new Target_SiteSettings();
             $siteSettings->siteId = $site->id;
-            $siteSettings->template = $postedSettings['template'];
+            $siteSettings->template = $postedSettings[ 'template' ];
 
-            $allSiteSettings[$site->id] = $siteSettings;
+            $allSiteSettings[ $site->id ] = $siteSettings;
         }
 
         $target->setSiteSettings($allSiteSettings);
@@ -194,7 +194,7 @@ class TargetsController extends Controller
 
         Portal::$plugin->targets->deleteTargetById($targetId);
 
-        return $this->asJson(['success' => true]);
+        return $this->asJson([ 'success' => true ]);
     }
 
 }

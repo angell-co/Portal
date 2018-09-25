@@ -52,7 +52,7 @@ class Target_SiteSettings extends ActiveRecord
      */
     public function getGroup(): ActiveQueryInterface
     {
-        return $this->hasOne(Target::class, ['id' => 'targetId']);
+        return $this->hasOne(Target::class, [ 'id' => 'targetId' ]);
     }
 
     /**
@@ -62,6 +62,6 @@ class Target_SiteSettings extends ActiveRecord
      */
     public function getSite(): ActiveQueryInterface
     {
-        return $this->hasOne(Site::class, ['id' => 'siteId']);
+        return $this->hasOne(Site::class, [ 'id' => 'siteId' ]);
     }
 }
