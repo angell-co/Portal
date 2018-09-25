@@ -10,7 +10,7 @@ Preview your content on tablet & mobile in the device emulator and add additiona
 
 ![Screenshot](resources/img/screenshot.png)
 
-Check out the [introductory video](https://youtu.be/1BOb8LFw6eU).
+Check out the [introductory video](https://youtu.be/BWXoswTiUGk).
 
 **Available in the plugin store for $29.**
 
