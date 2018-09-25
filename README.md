@@ -8,6 +8,12 @@ Portal brings advanced Live Preview capabilities to Craft CMS.
 
 Preview your content on tablet & mobile and add additional target templates for users to switch to, all within the primary Live Preview window.
 
+![Screenshot](resources/img/screenshot.png)
+
+Check out the introductory video here: [TODO]()
+
+**Available in the plugin store for $29.**
+
 
 ## Requirements
 
@@ -27,22 +33,13 @@ To install the plugin, follow these instructions.
 
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Portal.
 
-## Portal Overview
 
--Insert text here-
+## TODO: Usage
 
-## Configuring Portal
+- Breakpoints - config to disable
 
--Insert text here-
+- Template Targets
 
-## Using Portal
-
--Insert text here-
-
-## Portal Roadmap
-
-Some things to do, and ideas for potential features:
-
-* Release it
+---
 
 Brought to you by [Angell & Co](https://angell.io)
