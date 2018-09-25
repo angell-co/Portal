@@ -203,7 +203,7 @@ class Targets extends Component
 
         // Sections
         $sections = Craft::$app->getSections()->getAllSections();
-        if ($sections) {
+        if (! empty($sections)) {
 
             $return[] = ['optgroup' => Craft::t('app', 'Sections')];
 
@@ -222,7 +222,7 @@ class Targets extends Component
 
         // Category groups
         $groups = Craft::$app->getCategories()->getAllGroups();
-        if ($groups) {
+        if (! empty($groups)) {
 
             $return[] = ['optgroup' => Craft::t('app', 'Category Groups')];
 
@@ -263,12 +263,6 @@ class Targets extends Component
             if (!$targetRecord) {
                 throw new TargetNotFoundException("No target exists with the ID '{$target->id}'");
             }
-
-            $oldTarget = new Target($targetRecord->toArray([
-                'id',
-                'name',
-                'context',
-            ]));
         } else {
             $targetRecord = new TargetRecord();
         }
@@ -282,7 +276,7 @@ class Targets extends Component
         // Make sure they're all there
         foreach (Craft::$app->getSites()->getAllSiteIds() as $siteId) {
             if (!isset($allSiteSettings[$siteId])) {
-                throw new Exception('Tried to save a target that is missing site settings');
+                throw new \Exception('Tried to save a target that is missing site settings');
             }
         }
 
@@ -439,11 +433,10 @@ class Targets extends Component
      * Creates a Target with attributes from a TargetRecord.
      *
      * @param TargetRecord|null $targetRecord
-     * @param bool              $withSiteSettings
      *
      * @return Target|null
      */
-    private function _createTargetFromRecord(TargetRecord $targetRecord = null, $withSiteSettings = false)
+    private function _createTargetFromRecord(TargetRecord $targetRecord = null)
     {
         if (!$targetRecord) {
             return null;
