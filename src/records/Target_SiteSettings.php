@@ -10,7 +10,7 @@
 
 namespace angellco\portal\records;
 
-use angellco\portal\models\Target;
+use angellco\portal\models\Target as TargetModel;
 
 use Craft;
 use craft\db\ActiveRecord;
@@ -24,7 +24,7 @@ use yii\db\ActiveQueryInterface;
  * @property int $targetId Target ID
  * @property int $siteId Site ID
  * @property string $template Template
- * @property Target $target Target
+ * @property TargetModel $target Target
  * @property Site $site Site
  *
  * @author    Angell & Co
@@ -52,7 +52,7 @@ class Target_SiteSettings extends ActiveRecord
      */
     public function getGroup(): ActiveQueryInterface
     {
-        return $this->hasOne(Target::class, [ 'id' => 'targetId' ]);
+        return $this->hasOne(TargetModel::class, [ 'id' => 'targetId' ]);
     }
 
     /**
