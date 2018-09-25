@@ -29,11 +29,11 @@ class Settings extends Model
     // =========================================================================
 
     /**
-     * Whether to show the breakpoints tool in Live Preview or not
+     * Whether to show the device emulator in Live Preview or not
      *
      * @var bool
      */
-    public $showLivePreviewBreakpoints = true;
+    public $showLivePreviewDeviceEmulator = true;
 
     // Public Methods
     // =========================================================================
@@ -44,7 +44,7 @@ class Settings extends Model
     public function rules()
     {
         return [
-            ['showLivePreviewBreakpoints', 'boolean']
+            ['showLivePreviewDeviceEmulator', 'boolean']
         ];
     }
 

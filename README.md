@@ -6,7 +6,7 @@ Portal brings advanced Live Preview capabilities to Craft CMS.
 
 ![Banner](resources/img/banner.png)
 
-Preview your content on tablet & mobile and add additional target templates for users to switch to, all within the primary Live Preview window.
+Preview your content on tablet & mobile in the device emulator and add additional target templates for users to switch to, all within the primary Live Preview window.
 
 ![Screenshot](resources/img/screenshot.png)
 
@@ -34,11 +34,37 @@ To install the plugin, follow these instructions.
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Portal.
 
 
-## TODO: Usage
+## Usage
 
-- Breakpoints - config to disable
+There are two parts to Portal right now and both affect Live Preview. 
 
-- Template Targets
+
+### Device Emulator
+
+The device emulator is a tool that lets your users preview their content as it will look on different device screens, for simplicity there are only three options: Desktop, Tablet and Mobile. It looks like this:
+
+![Screenshot](resources/img/screenshot.png)
+
+You can switch between devices, change the orientation and also the zoom level.
+
+If you wish to disable this feature then add the following to `config/portal.php`:
+
+```php
+<?php
+
+return [
+    'showLivePreviewDeviceEmulator' => true
+];
+```
+
+### Targets
+
+Targets are alternative templates that you want to make available to Live Preview, you can add them by going to the Portal tab in the main navigation.
+
+If you have multiple Sites then you can load different templates for each Site, as well as restrict a Target to either a Section or Category Group.
+
+Once you have a Target added you will see a select input appear in the Live Preview window allowing your users to efficiently preview their content across multiple templates.
+
 
 ---
 

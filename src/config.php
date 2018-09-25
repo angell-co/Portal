@@ -23,5 +23,5 @@
  */
 
 return [
-    'showLivePreviewBreakpoints' => true
+    'showLivePreviewDeviceEmulator' => true
 ];

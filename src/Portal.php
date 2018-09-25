@@ -217,7 +217,7 @@ class Portal extends Plugin
                     'siteId' => $site->id,
                     'context' => $context,
                     'targets' => $this->targets->getAllTargetsForLivePreview(),
-                    'showBreakpoints' => $this->getSettings()->showLivePreviewBreakpoints
+                    'showBreakpoints' => $this->getSettings()->showLivePreviewDeviceEmulator
                 ];
 
                 // Register the AssetBundle
