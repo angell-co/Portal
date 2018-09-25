@@ -10,7 +10,7 @@ Preview your content on tablet & mobile and add additional target templates for 
 
 ![Screenshot](resources/img/screenshot.png)
 
-Check out the introductory video here: [TODO]()
+Check out the [introductory video](https://youtu.be/1BOb8LFw6eU).
 
 **Available in the plugin store for $29.**
 
