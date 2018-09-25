@@ -203,7 +203,7 @@ class Targets extends Component
 
         // Sections
         $sections = Craft::$app->getSections()->getAllSections();
-        if (! empty($sections)) {
+        if (!empty($sections)) {
 
             $return[ ] = [ 'optgroup' => Craft::t('app', 'Sections') ];
 
@@ -222,7 +222,7 @@ class Targets extends Component
 
         // Category groups
         $groups = Craft::$app->getCategories()->getAllGroups();
-        if (! empty($groups)) {
+        if (!empty($groups)) {
 
             $return[ ] = [ 'optgroup' => Craft::t('app', 'Category Groups') ];
 
