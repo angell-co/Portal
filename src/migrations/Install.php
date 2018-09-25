@@ -137,10 +137,10 @@ class Install extends Migration
      */
     protected function createIndexes()
     {
-        $this->createIndex(null, '{{%portal_targets}}', ['name'], true);
-        $this->createIndex(null, '{{%portal_targets_sites}}', ['targetId', 'siteId'], true);
-        $this->createIndex(null, '{{%portal_targets_sites}}', ['targetId', 'siteId', 'template'], true);
-        $this->createIndex(null, '{{%portal_targets_sites}}', ['siteId'], false);
+        $this->createIndex(null, '{{%portal_targets}}', [ 'name' ], true);
+        $this->createIndex(null, '{{%portal_targets_sites}}', [ 'targetId', 'siteId' ], true);
+        $this->createIndex(null, '{{%portal_targets_sites}}', [ 'targetId', 'siteId', 'template' ], true);
+        $this->createIndex(null, '{{%portal_targets_sites}}', [ 'siteId' ], false);
 
     }
 
@@ -151,8 +151,8 @@ class Install extends Migration
      */
     protected function addForeignKeys()
     {
-        $this->addForeignKey(null, '{{%portal_targets_sites}}', ['targetId'], '{{%portal_targets}}', ['id'], 'CASCADE', null);
-        $this->addForeignKey(null, '{{%portal_targets_sites}}', ['siteId'], '{{%sites}}', ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, '{{%portal_targets_sites}}', [ 'targetId' ], '{{%portal_targets}}', [ 'id' ], 'CASCADE', null);
+        $this->addForeignKey(null, '{{%portal_targets_sites}}', [ 'siteId' ], '{{%sites}}', [ 'id' ], 'CASCADE', 'CASCADE');
     }
 
     /**

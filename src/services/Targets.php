@@ -70,8 +70,8 @@ class Targets extends Component
         }
 
         return $this->_allTargetIds = (new Query())
-            ->select(['id'])
-            ->from(['{{%portal_targets}}'])
+            ->select([ 'id' ])
+            ->from([ '{{%portal_targets}}' ])
             ->column();
     }
 
@@ -86,15 +86,15 @@ class Targets extends Component
             return array_values($this->_targetsById);
         }
 
-        $this->_targetsById = [];
+        $this->_targetsById = [ ];
 
         /** @var TargetRecord[] $targetRecords */
         $targetRecords = TargetRecord::find()
-            ->orderBy(['name' => SORT_ASC])
+            ->orderBy([ 'name' => SORT_ASC ])
             ->all();
 
         foreach ($targetRecords as $targetRecord) {
-            $this->_targetsById[$targetRecord->id] = $this->_createTargetFromRecord($targetRecord);
+            $this->_targetsById[ $targetRecord->id ] = $this->_createTargetFromRecord($targetRecord);
         }
 
         $this->_fetchedAllTargets = true;
@@ -111,12 +111,12 @@ class Targets extends Component
     public function getAllTargetsForLivePreview()
     {
 
-        $targetsByContext = [];
+        $targetsByContext = [ ];
 
         /** @var Target $target */
         foreach ($this->getAllTargets() as $target) {
             $target->getSiteSettings();
-            $targetsByContext[$target->context][] = $target;
+            $targetsByContext[ $target->context ][ ] = $target;
         }
 
         return $targetsByContext;
@@ -142,7 +142,7 @@ class Targets extends Component
     public function getTargetById(int $targetId)
     {
         if ($this->_targetsById !== null && array_key_exists($targetId, $this->_targetsById)) {
-            return $this->_targetsById[$targetId];
+            return $this->_targetsById[ $targetId ];
         }
 
         if ($this->_fetchedAllTargets) {
@@ -150,15 +150,15 @@ class Targets extends Component
         }
 
         $targetRecord = TargetRecord::find()
-            ->where(['id' => $targetId])
+            ->where([ 'id' => $targetId ])
             ->one();
 
         if ($targetRecord === null) {
-            return $this->_targetsById[$targetId] = null;
+            return $this->_targetsById[ $targetId ] = null;
         }
 
         /** @var TargetRecord $targetRecord */
-        return $this->_targetsById[$targetId] = $this->_createTargetFromRecord($targetRecord);
+        return $this->_targetsById[ $targetId ] = $this->_createTargetFromRecord($targetRecord);
     }
 
     /**
@@ -170,12 +170,12 @@ class Targets extends Component
     public function getTargetSiteSettings(int $targetId): array
     {
         $results = Target_SiteSettingsRecord::find()
-            ->where(['targetId' => $targetId])
+            ->where([ 'targetId' => $targetId ])
             ->all();
-        $siteSettings = [];
+        $siteSettings = [ ];
 
         foreach ($results as $result) {
-            $siteSettings[] = new Target_SiteSettings($result->toArray([
+            $siteSettings[ ] = new Target_SiteSettings($result->toArray([
                 'id',
                 'targetId',
                 'siteId',
@@ -205,14 +205,14 @@ class Targets extends Component
         $sections = Craft::$app->getSections()->getAllSections();
         if ($sections) {
 
-            $return[] = ['optgroup' => Craft::t('app', 'Sections')];
+            $return[ ] = [ 'optgroup' => Craft::t('app', 'Sections') ];
 
             /** @var Section $section */
             foreach ($sections as $section) {
 
                 $id = 'section:'.$section->id;
 
-                $return[$id] = [
+                $return[ $id ] = [
                     'label' => $section->name,
                     'value' => $id,
                 ];
@@ -224,14 +224,14 @@ class Targets extends Component
         $groups = Craft::$app->getCategories()->getAllGroups();
         if ($groups) {
 
-            $return[] = ['optgroup' => Craft::t('app', 'Category Groups')];
+            $return[ ] = [ 'optgroup' => Craft::t('app', 'Category Groups') ];
 
             /** @var CategoryGroup $group */
             foreach ($groups as $group) {
 
                 $id = 'categoryGroup:'.$group->id;
 
-                $return[$id] = [
+                $return[ $id ] = [
                     'label' => $group->name,
                     'value' => $id,
                 ];
@@ -257,7 +257,7 @@ class Targets extends Component
 
         if (!$isNewTarget) {
             $targetRecord = TargetRecord::find()
-                ->where(['id' => $target->id])
+                ->where([ 'id' => $target->id ])
                 ->one();
 
             if (!$targetRecord) {
@@ -281,7 +281,7 @@ class Targets extends Component
 
         // Make sure they're all there
         foreach (Craft::$app->getSites()->getAllSiteIds() as $siteId) {
-            if (!isset($allSiteSettings[$siteId])) {
+            if (!isset($allSiteSettings[ $siteId ])) {
                 throw new Exception('Tried to save a target that is missing site settings');
             }
         }
@@ -300,7 +300,7 @@ class Targets extends Component
             }
 
             // Might as well update our cache of the target while we have it.
-            $this->_targetsById[$target->id] = $target;
+            $this->_targetsById[ $target->id ] = $target;
 
             // Update the site settings
             // -----------------------------------------------------------------
@@ -308,15 +308,15 @@ class Targets extends Component
             if (!$isNewTarget) {
                 // Get the old target site settings
                 $allOldSiteSettingsRecords = Target_SiteSettingsRecord::find()
-                    ->where(['targetId' => $target->id])
+                    ->where([ 'targetId' => $target->id ])
                     ->indexBy('siteId')
                     ->all();
             }
 
             foreach ($allSiteSettings as $siteId => $siteSettings) {
                 // Was this already selected?
-                if (!$isNewTarget && isset($allOldSiteSettingsRecords[$siteId])) {
-                    $siteSettingsRecord = $allOldSiteSettingsRecords[$siteId];
+                if (!$isNewTarget && isset($allOldSiteSettingsRecords[ $siteId ])) {
+                    $siteSettingsRecord = $allOldSiteSettingsRecords[ $siteId ];
                 } else {
                     $siteSettingsRecord = new Target_SiteSettingsRecord();
                     $siteSettingsRecord->targetId = $target->id;
@@ -388,7 +388,7 @@ class Targets extends Component
         try {
 
             Craft::$app->getDb()->createCommand()
-                ->delete('{{%portal_targets}}', ['id' => $target->id])
+                ->delete('{{%portal_targets}}', [ 'id' => $target->id ])
                 ->execute();
 
             $transaction->commit();
@@ -412,14 +412,14 @@ class Targets extends Component
     {
         $targetSiteSettings = $target->getSiteSettings();
 
-        if (isset($targetSiteSettings[$siteId])) {
+        if (isset($targetSiteSettings[ $siteId ])) {
             // Set Craft to the site template mode
             $view = Craft::$app->getView();
             $oldTemplateMode = $view->getTemplateMode();
             $view->setTemplateMode($view::TEMPLATE_MODE_SITE);
 
             // Does the template exist?
-            $templateExists = Craft::$app->getView()->doesTemplateExist((string)$targetSiteSettings[$siteId]->template);
+            $templateExists = Craft::$app->getView()->doesTemplateExist((string) $targetSiteSettings[ $siteId ]->template);
 
             // Restore the original template mode
             $view->setTemplateMode($oldTemplateMode);

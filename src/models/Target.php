@@ -67,11 +67,11 @@ class Target extends Model
     public function rules(): array
     {
         return [
-            [['id'], 'number', 'integerOnly' => true],
-            [['name'], UniqueValidator::class, 'targetClass' => TargetRecord::class],
-            [['name', 'context', 'siteSettings'], 'required'],
-            [['name'], 'string', 'max' => 255],
-            [['siteSettings'], 'validateSiteSettings'],
+            [ [ 'id' ], 'number', 'integerOnly' => true ],
+            [ [ 'name' ], UniqueValidator::class, 'targetClass' => TargetRecord::class ],
+            [ [ 'name', 'context', 'siteSettings' ], 'required' ],
+            [ [ 'name' ], 'string', 'max' => 255 ],
+            [ [ 'siteSettings' ], 'validateSiteSettings' ],
         ];
     }
 
@@ -109,7 +109,7 @@ class Target extends Model
         }
 
         if (!$this->id) {
-            return [];
+            return [ ];
         }
 
         // Set them with setSiteSettings() so setTarget() gets called on them
@@ -144,8 +144,8 @@ class Target extends Model
             $this->_contextOptions = Portal::$plugin->targets->getContextOptions();
         }
 
-        if (isset($this->_contextOptions[$this->context])) {
-            return $this->_contextOptions[$this->context]['label'];
+        if (isset($this->_contextOptions[ $this->context ])) {
+            return $this->_contextOptions[ $this->context ][ 'label' ];
         }
 
         return false;
