@@ -14,6 +14,7 @@ use angellco\portal\Portal;
 
 use Craft;
 use craft\base\Model;
+use craft\models\Site;
 use craft\validators\SiteIdValidator;
 
 use yii\base\InvalidConfigException;
