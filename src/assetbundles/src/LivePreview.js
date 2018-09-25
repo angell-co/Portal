@@ -1,4 +1,7 @@
+/** global: Craft */
+/** global: Garnish */
 /** global: Portal */
+/** global: Cookies */
 /**
  * Portal plugin for Craft CMS
  *
