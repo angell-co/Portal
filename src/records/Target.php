@@ -22,7 +22,6 @@ use yii\db\ActiveQueryInterface;
  * @property int $id ID
  * @property string $name Name
  * @property string $context Context
-
  * @property Target_SiteSettings[] $siteSettings Site settings
  * @property Target[] $targets Targets
  *
@@ -52,7 +51,7 @@ class Target extends ActiveRecord
      */
     public function getSiteSettings(): ActiveQueryInterface
     {
-        return $this->hasMany(Target_SiteSettings::class, ['targetId' => 'id']);
+        return $this->hasMany(Target_SiteSettings::class, [ 'targetId' => 'id' ]);
     }
 
 }

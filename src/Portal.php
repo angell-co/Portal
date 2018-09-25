@@ -90,10 +90,10 @@ class Portal extends Plugin
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
-            function (RegisterUrlRulesEvent $event) {
-                $event->rules['portal/targets'] = 'portal/targets/index';
-                $event->rules['portal/targets/new'] = 'portal/targets/edit-target';
-                $event->rules['portal/targets/<targetId:\d+>'] = 'portal/targets/edit-target';
+            function(RegisterUrlRulesEvent $event) {
+                $event->rules[ 'portal/targets' ] = 'portal/targets/index';
+                $event->rules[ 'portal/targets/new' ] = 'portal/targets/edit-target';
+                $event->rules[ 'portal/targets/<targetId:\d+>' ] = 'portal/targets/edit-target';
             }
         );
 
@@ -101,7 +101,7 @@ class Portal extends Plugin
         Event::on(
             Plugins::class,
             Plugins::EVENT_AFTER_LOAD_PLUGINS,
-            function () {
+            function() {
                 if ($this->isInstalled && !Craft::$app->plugins->doesPluginRequireDatabaseUpdate($this)) {
                     $this->_loadLivePreviewCpResources();
                 }
@@ -118,7 +118,7 @@ class Portal extends Plugin
             Event::on(
                 View::class,
                 View::EVENT_AFTER_RENDER_PAGE_TEMPLATE,
-                function (TemplateEvent $event) {
+                function(TemplateEvent $event) {
                     $this->_switchTemplate($event);
                 }
             );
@@ -130,7 +130,7 @@ class Portal extends Plugin
             Craft::t(
                 'portal',
                 '{name} plugin loaded',
-                ['name' => $this->name]
+                [ 'name' => $this->name ]
             ),
             __METHOD__
         );
@@ -157,16 +157,16 @@ class Portal extends Plugin
             $context = false;
 
             // Entries
-            if ( count($segments) >= 3 && $segments[0] == 'entries' )
+            if (count($segments) >= 3 && $segments[ 0 ] == 'entries')
             {
 
-                if ($segments[2] == 'new')
+                if ($segments[ 2 ] == 'new')
                 {
-                    $section = Craft::$app->sections->getSectionByHandle($segments[1]);
+                    $section = Craft::$app->sections->getSectionByHandle($segments[ 1 ]);
                 }
                 else
                 {
-                    $entryId = (integer) explode('-',$segments[2])[0];
+                    $entryId = (integer) explode('-', $segments[ 2 ])[ 0 ];
                     $entry = Craft::$app->entries->getEntryById($entryId);
 
                     if ($entry)
@@ -183,9 +183,9 @@ class Portal extends Plugin
 
             }
             // Category groups
-            else if ( count($segments) >= 3 && $segments[0] == 'categories' )
+            else if (count($segments) >= 3 && $segments[ 0 ] == 'categories')
             {
-                $group = Craft::$app->categories->getGroupByHandle($segments[1]);
+                $group = Craft::$app->categories->getGroupByHandle($segments[ 1 ]);
                 if ($group)
                 {
                     $context = 'categoryGroup:'.$group->id;
@@ -199,7 +199,7 @@ class Portal extends Plugin
                 // Work out the Site
                 $siteHandle = null;
                 if (count($segments) === 4) {
-                    $siteHandle = $segments[3];
+                    $siteHandle = $segments[ 3 ];
                 }
 
                 if ($siteHandle) {
@@ -237,9 +237,9 @@ class Portal extends Plugin
      */
     private function _fakeUserAgent()
     {
-        if (isset($_COOKIE['portal_breakpoint'])) {
+        if (isset($_COOKIE[ 'portal_breakpoint' ])) {
 
-            $breakpoint = $_COOKIE['portal_breakpoint'];
+            $breakpoint = $_COOKIE[ 'portal_breakpoint' ];
             $headers = Craft::$app->request->getHeaders();
 
             if ($breakpoint === 'tablet') {
@@ -257,9 +257,9 @@ class Portal extends Plugin
      */
     private function _switchTemplate($event)
     {
-        if (isset($_COOKIE['portal_template'])) {
+        if (isset($_COOKIE[ 'portal_template' ])) {
 
-            $newTemplate = $_COOKIE['portal_template'];
+            $newTemplate = $_COOKIE[ 'portal_template' ];
 
             if ($newTemplate !== "" && $event->template !== $newTemplate) {
                 $event->output = Craft::$app->view->renderPageTemplate($newTemplate, $event->variables);
