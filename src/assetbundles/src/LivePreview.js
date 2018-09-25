@@ -1,3 +1,4 @@
+/** global: Portal */
 /**
  * Portal plugin for Craft CMS
  *
