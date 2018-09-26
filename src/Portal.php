@@ -143,6 +143,7 @@ class Portal extends Plugin
      * Loads up the CP resources we need for Live Preview.
      *
      * @throws NotFoundHttpException
+     * @throws \craft\errors\SiteNotFoundException
      * @throws \yii\base\InvalidConfigException
      */
     private function _loadLivePreviewCpResources()
@@ -157,10 +158,10 @@ class Portal extends Plugin
             $context = false;
 
             // Entries
-            if (count($segments) >= 3 && $segments[ 0 ] == 'entries')
+            if (count($segments) >= 3 && $segments[ 0 ] === 'entries')
             {
 
-                if ($segments[ 2 ] == 'new')
+                if ($segments[ 2 ] === 'new')
                 {
                     $section = Craft::$app->sections->getSectionByHandle($segments[ 1 ]);
                 }
@@ -183,12 +184,21 @@ class Portal extends Plugin
 
             }
             // Category groups
-            else if (count($segments) >= 3 && $segments[ 0 ] == 'categories')
+            else if (count($segments) >= 3 && $segments[ 0 ] === 'categories')
             {
                 $group = Craft::$app->categories->getGroupByHandle($segments[ 1 ]);
                 if ($group)
                 {
                     $context = 'categoryGroup:'.$group->id;
+                }
+            }
+            // Product Types
+            else if (count($segments) >= 4 && $segments[ 0 ] === 'commerce' && $segments[ 1 ] === 'products')
+            {
+                $productType = craft\commerce\Plugin::getInstance()->productTypes->getProductTypeByHandle($segments[ 2 ]);
+                if ($productType)
+                {
+                    $context = 'productType:'.$productType->id;
                 }
             }
 
