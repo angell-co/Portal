@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 
+
+## 1.0.5 - 2018-09-27
+
 ### Added
 - Added support for Product Types if Commerce is installed
 
