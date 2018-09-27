@@ -31,7 +31,7 @@ use yii\base\InvalidConfigException;
  *
  * @author    Angell & Co
  * @package   Portal
- * @since     0.1.0
+ * @since     1.0.0
  */
 class Target_SiteSettings extends Model
 {
