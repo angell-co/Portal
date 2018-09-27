@@ -61,7 +61,7 @@ return [
 
 Targets are alternative templates that you want to make available to Live Preview, you can add them by going to the Portal tab in the main navigation.
 
-If you have multiple Sites then you can load different templates for each Site, as well as restrict a Target to either a Section or Category Group.
+If you have multiple Sites then you can load different templates for each Site, as well as restrict a Target to either a Section, Category Group or Product Type.
 
 Once you have a Target added you will see a select input appear in the Live Preview window allowing your users to efficiently preview their content across multiple templates.
 

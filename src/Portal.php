@@ -19,10 +19,11 @@ use craft\base\Plugin;
 use craft\events\TemplateEvent;
 use craft\helpers\Json;
 use craft\services\Plugins;
-use craft\events\PluginEvent;
 use craft\web\UrlManager;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\View;
+
+use craft\commerce\Plugin as CommercePlugin;
 
 use yii\base\Event;
 use yii\web\NotFoundHttpException;
@@ -57,6 +58,14 @@ class Portal extends Plugin
      */
     public static $plugin;
 
+    /**
+     * Set to true if Craft Commerce is installed
+     *
+     * @var bool
+     */
+    public static $commerceInstalled;
+
+
     // Public Properties
     // =========================================================================
 
@@ -66,6 +75,7 @@ class Portal extends Plugin
      * @var string
      */
     public $schemaVersion = '0.1.0';
+
 
     // Public Methods
     // =========================================================================
@@ -85,6 +95,9 @@ class Portal extends Plugin
     {
         parent::init();
         self::$plugin = $this;
+
+        // Check if Commerce is installed
+        self::$commerceInstalled = class_exists(CommercePlugin::class);
 
         // Register our CP routes
         Event::on(
@@ -143,6 +156,7 @@ class Portal extends Plugin
      * Loads up the CP resources we need for Live Preview.
      *
      * @throws NotFoundHttpException
+     * @throws \craft\errors\SiteNotFoundException
      * @throws \yii\base\InvalidConfigException
      */
     private function _loadLivePreviewCpResources()
@@ -157,10 +171,10 @@ class Portal extends Plugin
             $context = false;
 
             // Entries
-            if (count($segments) >= 3 && $segments[ 0 ] == 'entries')
+            if (count($segments) >= 3 && $segments[ 0 ] === 'entries')
             {
 
-                if ($segments[ 2 ] == 'new')
+                if ($segments[ 2 ] === 'new')
                 {
                     $section = Craft::$app->sections->getSectionByHandle($segments[ 1 ]);
                 }
@@ -183,12 +197,21 @@ class Portal extends Plugin
 
             }
             // Category groups
-            else if (count($segments) >= 3 && $segments[ 0 ] == 'categories')
+            else if (count($segments) >= 3 && $segments[ 0 ] === 'categories')
             {
                 $group = Craft::$app->categories->getGroupByHandle($segments[ 1 ]);
                 if ($group)
                 {
                     $context = 'categoryGroup:'.$group->id;
+                }
+            }
+            // Product Types
+            else if ($this::$commerceInstalled && count($segments) >= 4 && $segments[ 0 ] === 'commerce' && $segments[ 1 ] === 'products')
+            {
+                $productType = CommercePlugin::getInstance()->productTypes->getProductTypeByHandle($segments[ 2 ]);
+                if ($productType)
+                {
+                    $context = 'productType:'.$productType->id;
                 }
             }
 
