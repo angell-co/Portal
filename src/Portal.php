@@ -19,10 +19,11 @@ use craft\base\Plugin;
 use craft\events\TemplateEvent;
 use craft\helpers\Json;
 use craft\services\Plugins;
-use craft\events\PluginEvent;
 use craft\web\UrlManager;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\View;
+
+use craft\commerce\Plugin as CommercePlugin;
 
 use yii\base\Event;
 use yii\web\NotFoundHttpException;
@@ -57,6 +58,14 @@ class Portal extends Plugin
      */
     public static $plugin;
 
+    /**
+     * Set to true if Craft Commerce is installed
+     *
+     * @var bool
+     */
+    public static $commerceInstalled;
+
+
     // Public Properties
     // =========================================================================
 
@@ -66,6 +75,7 @@ class Portal extends Plugin
      * @var string
      */
     public $schemaVersion = '0.1.0';
+
 
     // Public Methods
     // =========================================================================
@@ -85,6 +95,9 @@ class Portal extends Plugin
     {
         parent::init();
         self::$plugin = $this;
+
+        // Check if Commerce is installed
+        self::$commerceInstalled = class_exists(CommercePlugin::class);
 
         // Register our CP routes
         Event::on(
@@ -193,9 +206,9 @@ class Portal extends Plugin
                 }
             }
             // Product Types
-            else if (count($segments) >= 4 && $segments[ 0 ] === 'commerce' && $segments[ 1 ] === 'products')
+            else if ($this::$commerceInstalled && count($segments) >= 4 && $segments[ 0 ] === 'commerce' && $segments[ 1 ] === 'products')
             {
-                $productType = craft\commerce\Plugin::getInstance()->productTypes->getProductTypeByHandle($segments[ 2 ]);
+                $productType = CommercePlugin::getInstance()->productTypes->getProductTypeByHandle($segments[ 2 ]);
                 if ($productType)
                 {
                     $context = 'productType:'.$productType->id;
