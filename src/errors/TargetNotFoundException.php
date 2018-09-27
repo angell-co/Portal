@@ -17,7 +17,7 @@ use yii\base\Exception;
  *
  * @author    Angell & Co
  * @package   Portal
- * @since     0.1.0
+ * @since     1.0.0
  */
 class TargetNotFoundException extends Exception
 {

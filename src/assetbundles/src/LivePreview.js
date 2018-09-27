@@ -13,7 +13,7 @@
  * @copyright Copyright (c) 2018 Angell & Co
  * @link      https://angell.io
  * @package   Portal
- * @since     0.1.0
+ * @since     1.0.0
  */
 
 if (typeof Portal === 'undefined')

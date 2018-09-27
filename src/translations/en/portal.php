@@ -18,7 +18,7 @@
  *
  * @author    Angell & Co
  * @package   Portal
- * @since     0.1.0
+ * @since     1.0.0
  */
 return [
     'Portal plugin loaded' => 'Portal plugin loaded',
