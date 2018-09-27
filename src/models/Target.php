@@ -21,11 +21,14 @@ use craft\validators\UniqueValidator;
 /**
  * Target Model
  *
- * @property Target_SiteSettings[] $siteSettings Site-specific settings
+ * @property int|null $id ID
+ * @property string|null $name Name
+ * @property string|null $context Context
+ * @property Target_SiteSettings[] $siteSettings Site settings
  *
  * @author    Angell & Co
  * @package   Portal
- * @since     0.1.0
+ * @since     1.0.0
  */
 class Target extends Model
 {
@@ -51,6 +54,10 @@ class Target extends Model
      * @var array|null Site Settings
      */
     public $siteSettings;
+
+
+    // Private Properties
+    // =========================================================================
 
     /**
      * @var array|null Context Options

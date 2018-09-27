@@ -23,12 +23,15 @@ use craft\db\Query;
 use craft\models\CategoryGroup;
 use craft\models\Section;
 
+use craft\commerce\Plugin as CommercePlugin;
+use craft\commerce\models\ProductType;
+
 /**
  * Targets Service
  *
  * @author    Angell & Co
  * @package   Portal
- * @since     0.1.0
+ * @since     1.0.0
  */
 class Targets extends Component
 {
@@ -239,6 +242,26 @@ class Targets extends Component
 
         }
 
+        // Product Types
+        if (Portal::$commerceInstalled) {
+            $productTypes = CommercePlugin::getInstance()->productTypes->getAllProductTypes();
+            if (!empty($productTypes)) {
+
+                $return[ ] = [ 'optgroup' => Craft::t('commerce', 'Product Types') ];
+
+                /** @var ProductType $productType */
+                foreach ($productTypes as $productType) {
+
+                    $id = 'productType:'.$productType->id;
+
+                    $return[ $id ] = [
+                        'label' => $productType->name,
+                        'value' => $id,
+                    ];
+                }
+            }
+        }
+
         return $return;
     }
 
@@ -373,7 +396,10 @@ class Targets extends Component
      * Deletes a target.
      *
      * @param Target $target The target
+     *
      * @return bool Whether the target was deleted successfully
+     * @throws \Throwable
+     * @throws \yii\db\Exception
      */
     public function deleteTarget(Target $target): bool
     {
@@ -399,8 +425,10 @@ class Targets extends Component
      * Returns if the target’s template path is valid.
      *
      * @param Target $target
-     * @param int $siteId
+     * @param int    $siteId
+     *
      * @return bool
+     * @throws \yii\base\Exception
      */
     public function isTargetTemplateValid(Target $target, int $siteId): bool
     {

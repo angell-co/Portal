@@ -20,16 +20,18 @@ use craft\validators\SiteIdValidator;
 use yii\base\InvalidConfigException;
 
 /**
- * Target Model
+ * Target Model.
  *
- * Models are containers for data. Just about every time information is passed
- * between services, controllers, and templates in Craft, it’s passed via a model.
- *
- * https://craftcms.com/docs/plugins/models
+ * @property int|null $id ID
+ * @property int|null $targetId Target ID
+ * @property int|null $siteId Site ID
+ * @property string $template Template
+ * @property Target $target Target
+ * @property Site $site Site
  *
  * @author    Angell & Co
  * @package   Portal
- * @since     0.1.0
+ * @since     1.0.0
  */
 class Target_SiteSettings extends Model
 {
@@ -55,6 +57,9 @@ class Target_SiteSettings extends Model
      * @var string
      */
     public $template;
+
+    // Private Properties
+    // =========================================================================
 
     /**
      * @var Target|null
