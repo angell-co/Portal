@@ -139,7 +139,7 @@ class Target_SiteSettings extends Model
         $rules = [
             [ [ 'id', 'targetId', 'siteId' ], 'number', 'integerOnly' => true ],
             [ [ 'siteId' ], SiteIdValidator::class ],
-            [ [ 'template' ], 'string', 'max' => 500 ]
+            [ [ 'template' ], 'string', 'max' => 255 ]
         ];
 
         return $rules;
