@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 
+## 1.0.6 - 2019-01-28
+
+### Fixed
+- Fixed an issue with the length of the template attribute in MySQL 5.6 ([#5](https://github.com/angell-co/Portal/issues/5)).
+
 
 ## 1.0.5 - 2018-09-27
 
