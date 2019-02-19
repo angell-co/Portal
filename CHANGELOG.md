@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 
+
+## 1.1.0 - 2019-02-19
+
+### Fixed
+- Fixed an issue introduced due to the LivePreview changes in Craft 3.1 ([#7](https://github.com/angell-co/Portal/issues/7)).
+
+
 ## 1.0.6 - 2019-01-28
 
 ### Fixed

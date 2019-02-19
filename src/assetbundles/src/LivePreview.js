@@ -26,6 +26,9 @@ Portal.LivePreview = Garnish.Base.extend(
 
     $toolbar: null,
     $deviceMask: null,
+    $zoomMenu: null,
+    $breakpointButtons: null,
+    $iframe: null,
 
     zoomMenuBtn: null,
     targetMenuBtn: null,
@@ -64,7 +67,7 @@ Portal.LivePreview = Garnish.Base.extend(
         // Bind to the live preview events
         Garnish.on(Craft.LivePreview, 'enter', $.proxy(function(ev)
         {
-            this.onEnter(ev)
+            this.onEnter(ev);
         }, this));
 
         Garnish.on(Craft.LivePreview, 'exit', $.proxy(function(ev)
@@ -76,10 +79,21 @@ Portal.LivePreview = Garnish.Base.extend(
 
     onEnter: function(ev)
     {
-        if (this.settings.showBreakpoints) {
-            this.addListener(Craft.livePreview.$editor, 'resize', 'toggleToolbar');
-        }
-        this.attachToolbar();
+        // Bind arrive
+        Craft.livePreview.$iframeContainer.arrive(".lp-iframe", $.proxy(function(newIframe) {
+
+            // Cache the iframe so we can reference it at will
+            this.$iframe = $(newIframe);
+
+            if (this.settings.showBreakpoints) {
+                this.addListener(Craft.livePreview.$editor, 'resize', 'toggleToolbar');
+            }
+
+            this.attachToolbar();
+
+            // Ping the breakpoint buttons for when the iframe is re-loaded
+            $('.portal-lp-btn--active', this.$breakpointButtons).click();
+        }, this));
     },
 
     onExit: function(ev)
@@ -87,6 +101,9 @@ Portal.LivePreview = Garnish.Base.extend(
         if (this.settings.showBreakpoints) {
             this.removeListener(Craft.livePreview.$editor, 'resize');
         }
+
+        // Unbind arrive
+        Craft.livePreview.$iframeContainer.unbindArrive(".lp-iframe");
     },
 
     toggleToolbar: function()
@@ -105,7 +122,6 @@ Portal.LivePreview = Garnish.Base.extend(
 
     attachToolbar: function()
     {
-
         Craft.livePreview.$iframeContainer.addClass('portal-lp');
 
         if (!this.$toolbar) {
@@ -118,16 +134,16 @@ Portal.LivePreview = Garnish.Base.extend(
             if (this.settings.showBreakpoints) {
 
                 // Breakpoint buttons
-                var $breakpointButtons = $('<div class="btngroup portal-lp-breakpoints" />').appendTo(this.$toolbar);
-                $('<div class="portal-lp-btn portal-lp-btn--desktop" data-width="" data-height="" data-breakpoint="desktop" title="' + Craft.t('portal', 'Desktop') + '" />').appendTo($breakpointButtons);
-                $('<div class="portal-lp-btn portal-lp-btn--tablet" data-width="768" data-height="1006" data-breakpoint="tablet" title="' + Craft.t('portal', 'Tablet') + '" />').appendTo($breakpointButtons);
-                $('<div class="portal-lp-btn portal-lp-btn--mobile" data-width="375" data-height="653" data-breakpoint="mobile" title="' + Craft.t('portal', 'Mobile') + '" />').appendTo($breakpointButtons);
+                this.$breakpointButtons = $('<div class="btngroup portal-lp-breakpoints" />').appendTo(this.$toolbar);
+                $('<div class="portal-lp-btn portal-lp-btn--desktop" data-width="" data-height="" data-breakpoint="desktop" title="' + Craft.t('portal', 'Desktop') + '" />').appendTo(this.$breakpointButtons);
+                $('<div class="portal-lp-btn portal-lp-btn--tablet" data-width="768" data-height="1006" data-breakpoint="tablet" title="' + Craft.t('portal', 'Tablet') + '" />').appendTo(this.$breakpointButtons);
+                $('<div class="portal-lp-btn portal-lp-btn--mobile" data-width="375" data-height="653" data-breakpoint="mobile" title="' + Craft.t('portal', 'Mobile') + '" />').appendTo(this.$breakpointButtons);
 
 
                 // Zoom
-                var $zoomMenuBtn = $('<div class="btn portal-lp-zoom-btn menubtn no-outline">' + Craft.t('portal', 'Zoom') + '</div>').appendTo($btnGroup),
-                    $zoomMenu = $('<div class="menu portal-lp-menu" />').appendTo($btnGroup),
-                    $zoomMenuUl = $('<ul />').appendTo($zoomMenu);
+                var $zoomMenuBtn = $('<div class="btn portal-lp-zoom-btn menubtn no-outline">' + Craft.t('portal', 'Zoom') + '</div>').appendTo($btnGroup);
+                this.$zoomMenu = $('<div class="menu portal-lp-menu" />').appendTo($btnGroup);
+                var $zoomMenuUl = $('<ul />').appendTo(this.$zoomMenu);
 
                 $('<li><a data-zoom="full">100%</a></li>').appendTo($zoomMenuUl);
                 $('<li><a data-zoom="threequarters" class="sel">75%</a></li>').appendTo($zoomMenuUl);
@@ -182,13 +198,13 @@ Portal.LivePreview = Garnish.Base.extend(
 
             if (this.settings.showBreakpoints) {
                 // Breakpoint button click handlers
-                this.addListener($('.portal-lp-btn', $breakpointButtons), 'activate', 'changeBreakpoint');
+                this.addListener($('.portal-lp-btn', this.$breakpointButtons), 'activate', 'changeBreakpoint');
 
 
                 // Set the window to the last breakpoint we have in the cookie
                 var currentBreakpoint = Cookies.get('portal_breakpoint');
                 if (currentBreakpoint) {
-                    $breakpointButtons.find('.portal-lp-btn[data-breakpoint="' + currentBreakpoint + '"]').click();
+                    this.$breakpointButtons.find('.portal-lp-btn[data-breakpoint="' + currentBreakpoint + '"]').click();
                 }
             }
 
@@ -222,8 +238,8 @@ Portal.LivePreview = Garnish.Base.extend(
             var currentZoom = Cookies.get('portal_zoom');
             if (currentZoom && currentZoom !== 'threequarters') {
                 Craft.livePreview.$iframeContainer.addClass('portal-lp--zoom-'+currentZoom);
-                $zoomMenu.find('a.sel').removeClass('sel');
-                $zoomMenu.find('a[data-zoom='+currentZoom+']').addClass('sel');
+                this.$zoomMenu.find('a.sel').removeClass('sel');
+                this.$zoomMenu.find('a[data-zoom='+currentZoom+']').addClass('sel');
             }
         }
 
@@ -286,7 +302,7 @@ Portal.LivePreview = Garnish.Base.extend(
             }
 
             // Make the size change
-            Craft.livePreview.$iframe.css({
+            this.$iframe.css({
                 width: w + 'px',
                 height: h + 'px',
                 marginLeft: '-'+(w/2)+'px'
@@ -298,10 +314,6 @@ Portal.LivePreview = Garnish.Base.extend(
             this.resetIframe();
 
         }
-
-
-        // Force live preview to update
-        Craft.livePreview.forceUpdateIframe();
 
     },
 
@@ -339,14 +351,14 @@ Portal.LivePreview = Garnish.Base.extend(
             clearTimeout(this.rotatingTimeout);
             Craft.livePreview.$iframeContainer.addClass('portal-lp--rotating');
 
-            this.rotatingTimeout = setTimeout(function() {
+            this.rotatingTimeout = setTimeout($.proxy(function() {
 
-                var w = Craft.livePreview.$iframe.outerWidth(),
-                    h = Craft.livePreview.$iframe.outerHeight();
+                var w = this.$iframe.outerWidth(),
+                    h = this.$iframe.outerHeight();
 
                 // Check actual and intended orientation line up, if not then invert
                 if ((orientation === 'portrait' && w > h) || orientation === 'landscape' && w < h) {
-                    Craft.livePreview.$iframe.css({
+                    this.$iframe.css({
                         width: h + 'px',
                         height: w + 'px',
                         marginLeft: '-'+(h/2)+'px'
@@ -360,7 +372,7 @@ Portal.LivePreview = Garnish.Base.extend(
                     $btn.data('portal-working', false);
                 }, 50);
 
-            }, 350);
+            }, this), 350);
 
         } else {
             $btn.data('portal-working', false);
@@ -376,7 +388,7 @@ Portal.LivePreview = Garnish.Base.extend(
         Craft.livePreview.$iframeContainer.removeClass('portal-lp--resized');
         Craft.livePreview.$iframeContainer.removeClass('portal-lp--tablet');
         Craft.livePreview.$iframeContainer.removeClass('portal-lp--landscape');
-        Craft.livePreview.$iframe.css({
+        this.$iframe.css({
             width: '100%',
             height: '100%',
             marginLeft: '0'

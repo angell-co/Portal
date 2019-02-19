@@ -7,7 +7,11 @@ var gulp = require('gulp'),
     sass = require('gulp-sass');
 
 gulp.task('livepreview_js', function() {
-    return gulp.src(['node_modules/js-cookie/src/js.cookie.js','src/LivePreview.js'])
+    return gulp.src([
+            'node_modules/js-cookie/src/js.cookie.js',
+            'node_modules/arrive/src/arrive.js',
+            'src/LivePreview.js'
+        ])
         .pipe(uglify())
         .pipe(concat('LivePreview.min.js'))
         .pipe(gulp.dest('livepreview/dist/js/'));
