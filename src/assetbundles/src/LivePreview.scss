@@ -24,7 +24,7 @@
     }
 
     .portal-lp-breakpoints {
-      margin: -36px auto 0 auto;
+      margin: -26px auto 0 auto;
       width: 191px;
     }
 
@@ -78,6 +78,10 @@
     // Toolbar
     .header {
       background: #2F2F2F;
+
+      .portal-lp-breakpoints {
+        margin-top: -36px;
+      }
 
       .portal-lp-btngroup .btn {
         background: #444;
