@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## Unreleased
 
 
+## 1.1.1 - 2019-02-19
+
+### Changed
+- Upgraded gulp
+
+
 ## 1.1.0 - 2019-02-19
 
 ### Fixed
