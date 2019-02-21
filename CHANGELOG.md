@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 
+## 1.1.2 - 2019-02-21
+
+### Fixed
+- Fixed an exception that occured when trying to add a new commerce product with Portal installed ([#8](https://github.com/angell-co/Portal/issues/8))
+
 
 ## 1.1.1 - 2019-02-19
 

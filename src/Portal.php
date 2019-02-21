@@ -212,8 +212,17 @@ class Portal extends Plugin
 
                 // Work out the Site
                 $siteHandle = null;
-                if (count($segments) === 4) {
+                if (count($segments) === 4 && $segments[ 3 ] !== 'new') {
                     $siteHandle = $segments[ 3 ];
+                }
+
+                // Deal with commerce routes
+                if ($segments[ 0 ] === 'commerce'
+                    && $segments[ 1 ] === 'products'
+                    && $segments[ 3 ] === 'new'
+                    && isset($segments[ 4 ])
+                ) {
+                    $siteHandle = $segments[ 4 ];
                 }
 
                 if ($siteHandle) {
