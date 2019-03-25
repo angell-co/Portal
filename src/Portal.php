@@ -146,7 +146,6 @@ class Portal extends Plugin
     /**
      * Loads up the CP resources we need for Live Preview.
      *
-     * @throws NotFoundHttpException
      * @throws \craft\errors\SiteNotFoundException
      * @throws \yii\base\InvalidConfigException
      */
@@ -229,7 +228,7 @@ class Portal extends Plugin
                     $site = Craft::$app->getSites()->getSiteByHandle($siteHandle);
 
                     if (!$site) {
-                        throw new NotFoundHttpException('Invalid site handle: '.$siteHandle);
+                        $site = Craft::$app->getSites()->getPrimarySite();
                     }
                 } else {
                     $site = Craft::$app->getSites()->getPrimarySite();
