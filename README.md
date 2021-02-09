@@ -1,4 +1,6 @@
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/angell-co/Portal/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/angell-co/Portal/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/angell-co/Portal/badges/build.png?b=master)](https://scrutinizer-ci.com/g/angell-co/Portal/build-status/master) [![Code Intelligence Status](https://scrutinizer-ci.com/g/angell-co/Portal/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
+This plugin is no longer necessary! Support for device previews was added to the Craft core in [3.6](https://github.com/craftcms/cms/pull/7375).
+
+---
 
 # Portal
 
